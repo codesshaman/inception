@@ -1,0 +1,9 @@
+login by root
+apt install sudo
+nano /etc/sudoers
+apt install ssh
+nano /etc/ssh/sshd_status
+apt install ufw
+ufw enable
+ufw allow ssh (not 22, only ssh!)
+port forwarding
