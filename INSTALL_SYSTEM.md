@@ -4,7 +4,7 @@
 
 Заходим на сайт ```https://www.debian.org/``` и скачиваем веб-инсталлер
 
-![скачивание debian linux](media/install_step_0.png)
+![скачивание debian linux](media/install_debian/install_step_0.png)
 
 ## Шаг 2. Запуск
 
@@ -12,33 +12,33 @@
 
 Создаём виртуальную машину. Называем как-либо наш проект (я назвал просто Debian) и выставляем правильную конфигурацию системы. Если проект делается на школьном mac, его папку нужно размещать в goinfre:
 
-![настройка virtualbox](media/install_step_1.jpeg)
+![настройка virtualbox](media/install_debian/install_step_1.jpeg)
 
 ### 2.2 Выделение ресурсов
 
 Оперативной памяти под проект можно выделить от 512 МБ если на ПК 4-8 ГБ до 4096 МБ если на ПК от 16 и выше. Больше 4 ГБ памяти на данный проект выделять бессмысленно.
 
-![настройка virtualbox](media/install_step_2.jpeg)
+![настройка virtualbox](media/install_debian/install_step_2.jpeg)
 
  Формат выбираем VDI или VHD:
 
-![настройка virtualbox](media/install_step_3.png)
+![настройка virtualbox](media/install_debian/install_step_3.png)
 
 Выбираем динамический формат и выделяем под диск 8 гигабайт
 
-![настройка virtualbox](media/install_step_4.png)
+![настройка virtualbox](media/install_debian/install_step_4.png)
 
 Так же не забудьте выставить удобное разрешение экрана (коэффициент масштабирования), если работаете на mac.
 
  На mac обычно нормально 200% или 300%:
 
-![коэффициент масштабирования](media/install_step_5.png)
+![коэффициент масштабирования](media/install_debian/install_step_5.png)
 
 ### 2.3 Выделение ресурсов процессора
 
 Так же можно добавить системе ещё ядер. Больше четырёх добавлять избыточно:
 
-![ЦПУ](media/install_step_6.png)
+![ЦПУ](media/install_debian/install_step_6.png)
 
 ## Шаг 3. Установка
 
@@ -46,31 +46,31 @@
 
 После всех настроек запускаем наш проект. При старте нас встречает меню установки. Я выбираю обычный инсталлер, но при желании можно использовать и графический, это дело вкуса.
 
-![установка](media/install_step_7.png)
+![установка](media/install_debian/install_step_7.png)
 
 ### 3.2 Выбор языка и локации
 
 Мы можем выбрать американский английский (другие языки на проекте попросту не понадобятся), а в качестве локации указать Россию:
 
-![язык и локация](media/install_step_8.png)
+![язык и локация](media/install_debian/install_step_8.png)
 
-![язык и локация](media/install_step_9.png)
+![язык и локация](media/install_debian/install_step_9.png)
 
-![язык и локация](media/install_step_10.png)
+![язык и локация](media/install_debian/install_step_10.png)
 
-![язык и локация](media/install_step_11.png)
+![язык и локация](media/install_debian/install_step_11.png)
 
 А в качестве базовой локали оставляем английский:
 
-![язык и локация](media/install_step_12.png)
+![язык и локация](media/install_debian/install_step_12.png)
 
-![язык и локация](media/install_step_13.png)
+![язык и локация](media/install_debian/install_step_13.png)
 
 ### 3.3 Настройка хоста и пользователей
 
 Далее система предложит выбрать имя хоста. Можно назвать хост inception, однако я оставил дефолтное имя ```debian```:
 
-![имя хоста](media/install_step_14.png)
+![имя хоста](media/install_debian/install_step_14.png)
 
 Доменное имя пропускаем, оставив строку пустой.
 
@@ -78,7 +78,7 @@
 
 Далее нам предложат назвать как-то и обычного пользователя. Я ввожу свой ник в интре:
 
-![имя пользователя](media/install_step_15.png)
+![имя пользователя](media/install_debian/install_step_15.png)
 
 Принимаю это же имя в качестве имени аккаунта и ввожу простой пароль - единицу
 
@@ -86,33 +86,33 @@
 
 Выбираем свой часовой пояс.
 
-![временная зона](media/install_step_16.png)
+![временная зона](media/install_debian/install_step_16.png)
 
 ### 3.5 Разметка диска
 
 Далее запустится программа разметки. Нам не обязательно вдаваться в подробности файловой системы линукса, потому выбираем ```use entire disk``` - использовать весь диск.
 
-![разметка диска](media/install_step_17.png)
+![разметка диска](media/install_debian/install_step_17.png)
 
 Выбираем единственный доступный нам виртуальный диск:
 
-![разметка диска](media/install_step_18.png)
+![разметка диска](media/install_debian/install_step_18.png)
 
 Выбираем хранить все файлы в одном разделе:
 
-![разметка диска](media/install_step_19.png)
+![разметка диска](media/install_debian/install_step_19.png)
 
 И даём команду завершить разметку и записать изменения на диск:
 
-![разметка диска](media/install_step_20.png)
+![разметка диска](media/install_debian/install_step_20.png)
 
 Подтверждаем серьёзность наших намерений:
 
-![разметка диска](media/install_step_21.png)
+![разметка диска](media/install_debian/install_step_21.png)
 
 ### 3.6 Установка базовой системы
 
-![установка системы](media/install_step_22.png)
+![установка системы](media/install_debian/install_step_22.png)
 
 После разметки запустится установка базовой системы. Далее я опишу только те шаги, которые важны нам, остальные действия можно будет пропустить нажав ```enter```
 
@@ -122,50 +122,40 @@
 
 Нам нужен только ssh-сервер, потому пробелом убираем галочки со всего остального. Ни в коем случае не накатываем графическое окружение - с ним наш проект будет весить слишком много и вряд ли поместится в облако. Системные утиллиты нам так же не нужны.
 
-![установка системы](media/install_step_23.png)
+![установка системы](media/install_debian/install_step_23.png)
 
 ### 3.6.1 Выбор ПО
 
 В конце концов система наконец скажет нам что хочет установить системный загрузчик в главный раздел:
 
-![установка системы](media/install_step_24.png)
+![установка системы](media/install_debian/install_step_24.png)
 
 Выбираем раздел (он у нас один):
 
-![установка системы](media/install_step_25.png)
+![установка системы](media/install_debian/install_step_25.png)
 
 И установка завершиться:
 
-![установка системы](media/install_step_26.png)
+![установка системы](media/install_debian/install_step_26.png)
 
 Принимаем предложение закончить установку:
 
-![установка системы](media/install_step_27.png)
+![установка системы](media/install_debian/install_step_27.png)
 
 ## Шаг 4 Загрузка и установка ПО
 
 После перезагрузки нам предложат выбрать нашу систему:
 
-![загрузка системы](media/install_step_28.png)
+![загрузка системы](media/install_debian/install_step_28.png)
 
 Загрузимся под суперпользователем:
 
-![загрузка системы](media/install_step_29.png)
+![загрузка системы](media/install_debian/install_step_29.png)
 
 ### 4.1 Установка необходимого софта
 
 Обновим репозитории командой ```apt update```:
 
-![загрузка системы](media/install_step_30.png)
+![загрузка системы](media/install_debian/install_step_30.png)
 
 После этого установим нужные нам приложения командой ```apt install ufw docker docker-compose```
-
-### 4.2. Настройка файервола
-
-Для открытия порта SSH вводим последовательно:
-
-```ufw enable```
-
-```ufw allow ssh```
-
-![настройка файервола](media/install_step_31.png)
