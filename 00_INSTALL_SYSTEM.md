@@ -158,4 +158,4 @@
 
 ![загрузка системы](media/install_debian/install_step_30.png)
 
-После этого установим нужные нам приложения командой ```apt install -y sudo ufw docker docker-compose openbox xinit```
+После этого установим нужные нам приложения командой ```apt install -y sudo ufw docker docker-compose openbox xinit kitty firefox-esr```
