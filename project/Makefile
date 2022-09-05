@@ -22,4 +22,12 @@ fclean:
 	@docker network prune --force
 	@docker volume prune --force
 
+<<<<<<< HEAD
 .PHONY: all re down clean fclean
+=======
+nginx :
+	@docker exec -it nginx bash
+db :
+	@docker exec -it mariadb bash
+re : clean all
+>>>>>>> 37f370eb3f55c19c5bf242587cc0b998c3b30e6f
