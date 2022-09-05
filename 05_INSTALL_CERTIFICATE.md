@@ -147,7 +147,7 @@ server {
 
 В раздел volumes добавляем ещё один раздел с нашими ключами:
 
-```- ./nginx/ssl:/home/user/project/srcs/requirements/tools, где user - имя нашего пользователя.```
+```- /home/user/project/srcs/requirements/tools:/etc/nginx/ssl```, где user - имя нашего пользователя.
 
 В общем, позаботимся о том, чтобы пути к сертификатам были прописаны правильно, а так же откроем порт 443 в разделе ports:
 
