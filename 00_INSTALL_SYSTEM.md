@@ -2,7 +2,7 @@
 
 ## Шаг 1. Скачивание
 
-Заходим на сайт ```https://www.debian.org/``` и скачиваем веб-инсталлер
+Заходим на сайт [официальный сайт](https://www.debian.org/ "скачать debian") и скачиваем веб-инсталлер
 
 ![скачивание debian linux](media/install_debian/install_step_0.png)
 
