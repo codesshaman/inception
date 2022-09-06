@@ -119,3 +119,122 @@ FROM nginx:stable-alpine
 RUN	apk update && apk upgrade && apk add --no-cache nginx
 CMD ["nginx", "-g", "daemon off;"]
 ```
+
+![настройка nginx](media/nginx_deploy/step_6.png)
+
+Сохраняем, закрываем.
+
+## Шаг 4. Создание файла конфигурации
+
+Естественно, наш nginx не заработает без конфигурационного файла. Напишем же его!
+
+Посмотрев при помощи ```ls``` нашу папку с nginx-ом мы обнаружим в ней директории conf и tools. Стало быть, наша конфигурация должна лежать в папке conf, если мы нормальные белые люди (никакого расизма, просто расхожая фраза).
+
+Создадим наш конфиг прямо отсюда:
+
+```nano conf/nginx.conf```
+
+Так как мы уже тренировались с тестовым контейнером, возьмём его конфигурацию, слегка изменив её, чтобы она позволяла читать не html, а php файлы wordpress-а:
+```
+server {
+    listen      80;
+    listen      443 ssl;
+    server_name  jleslee.42.fr www.jleslee.42.fr;
+    root    /var/www/html;
+    index index.php;
+#   if ($scheme = 'http') {
+#       return 301 https://jleslee.42.fr$request_uri;
+#   }
+    ssl_certificate     /etc/nginx/ssl/jleslee.42.fr.crt;
+    ssl_certificate_key /etc/nginx/ssl/jleslee.42.fr.key;
+    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    keepalive_timeout 70;
+	location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass wordpress:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+}
+```
+
+Порт 9000 - это как раз порт нашего php-fpm, по которому осуществляется соединение между php и nginx. А wordpress в данном случае - имя нашего контейнера с wordpress-ом.
+
+Просто копипастим это в наш проект и сохраняем файл.
+
+А папку tools я по старой привычке использую для ключей, скопировав их туда:
+
+```cp ~/project/srcs/requirements/tools/* ~/project/srcs/requirements/nginx/tools/```
+
+## Шаг 5. Создание конфигурации docker-compose
+
+Docker-compose - это система запуска контейнеров docker, можно сказать, это некая надстройка над docker. Если в docker-файлах мы прописывали, какой софт установить внутри одного контейнерного окружения, то с docker-compose мы можем управлять запуском сразу множества подобных контейнеров, запуская их одной командой.
+
+Для этого переходим на два уровня выше (```../../```) и правим наш уже созданный docker-compose файл:
+
+```nano docker-compose.yml```
+
+Сначала прописываем версию. Последняя версия - третья.
+
+```
+version: '3'
+
+services:
+```
+
+Первым в списке наших сервисов будет nginx. Ставим два пробела и прописываем это слово.
+
+Далее мы говорим докеру, где лежит наш Dockerfile:
+
+```
+  nginx:
+    build: requirements/nginx/
+```
+
+Пробрасываем нужный порт (в этом задании мы можем использовать только ssl):
+
+```
+    ports:
+      - "443:443"
+```
+
+Добавляем разделы, чтобы контейнер увидел наш конфиг и наши ключи:
+
+```
+    volumes:
+      - ./conf:/etc/nginx/conf.d/
+      - ./tools:/etc/nginx/ssl/
+```
+
+Для тестирования добавляем ещё один раздел, примонтировав html нашего старого проекта к новому контейнеру.
+
+```- ./conf:/etc/nginx/conf.d/```
+
+Дальше мы прописываем тип перезапуска (всегда, за исключением команды остановки) и задаём контейнеру имя:
+
+```
+    restart: unless-stopped
+    container_name: nginx
+```
+
+И таким образом мы имеем следующую конфигурацию:
+
+```
+в разработке
+```
+
+Не забываем выключить тестовую конфигурацию:
+
+```cd ~/simple_docker_nginx_html/```
+
+```docker-compose down```
+
+И запускаем нашу новую конфигурацию:
+
+```cd ~/project/srcs/```
+
+```docker-compose up -d```

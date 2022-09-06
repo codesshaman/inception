@@ -96,9 +96,9 @@ touch project/Makefile
 mkdir project/srcs/requirements
 touch project/srcs/docker-compose.yml
 touch project/srcs/.env
-echo "DOMAIN_NAME=jleslee.21.school" > project/srcs/.env
-echo "CERT_=./project/srcs/requirements/nginx/conf/jleslee.cert" >> project/srcs/.env
-echo "KEY_=./project/srcs/requirements/nginx/conf/jleslee.key" >> project/srcs/.env
+echo "DOMAIN_NAME=jleslee.42.fr" > project/srcs/.env
+echo "CERT_=./project/srcs/requirements/tools/jleslee.42.fr.crt" >> project/srcs/.env
+echo "KEY_=./project/srcs/requirements/tools/jleslee.42.fr.key" >> project/srcs/.env
 echo "MYSQL_ROOT_PASSWORD=123456" >> project/srcs/.env
 echo "MYSQL_USER=user" >> project/srcs/.env
 echo "MYSQL_PASSWORD=1234" >> project/srcs/.env
@@ -116,6 +116,8 @@ touch project/srcs/requirements/nginx/.dockerignore
 mkdir project/srcs/requirements/tools
 mkdir project/srcs/requirements/wordpress
 ```
+
+> Не забываем менять jleslee на свой ник!
 
 Создадим файл с расширением .sh, закинув туда данный код:
 
