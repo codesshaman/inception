@@ -151,7 +151,7 @@ server {
     ssl_session_cache shared:SSL:10m;
     ssl_session_timeout 10m;
     keepalive_timeout 70;
-	location ~ \.php$ {
+    location ~ \.php$ {
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass wordpress:9000;
         fastcgi_index index.php;
