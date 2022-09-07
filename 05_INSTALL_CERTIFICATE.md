@@ -205,4 +205,4 @@ server {
 
 ```docker-compose down```
 
-и переходить к настройкам Makefile!
+и переходить к созданию Makefile!
