@@ -165,7 +165,38 @@ MYSQL_PASSWORD=1234
 И таким образом вся наша рабочая конфигурация на текущий момент выглядит следующим образом:
 
 ```
+version: '3'
 
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: requirements/nginx/Dockerfile
+    container_name: nginx
+    ports:
+      - "443:443"
+    volumes:
+      - ./requirements/nginx/conf/:/etc/nginx/conf.d/
+      - ./requirements/nginx/tools:/etc/nginx/ssl/
+      - /home/user/simple_docker_nginx_html/public/html:/var/www/html/
+    restart: unless-stopped
+
+  mariadb:
+    build:
+      context: .
+      dockerfile: requirements/mariadb/Dockerfile
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./requirements/mariadb/conf/:/mnt/"
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PWD:   ${MYSQL_ROOT_PWD}
+      WP_DATABASE_NAME: ${WP_DATABASE_NAME}
+      WP_DATABASE_USR:  ${WP_DATABASE_USR}
+      WP_DATABASE_PWD:  ${WP_DATABASE_PWD}
 ```
 
-И на момент с
+Запустим и проверим её работу:
+
