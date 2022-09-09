@@ -80,7 +80,6 @@ RUN	apk update && apk upgrade && apk add --no-cache \
         mariadb \
         mariadb-client
 EXPOSE 3306
-
 CMD ["sh", "/mnt/start.sh"]
 ```
 
@@ -107,6 +106,21 @@ CMD ["sh", "/mnt/start.sh"]
     container_name: mariadb
     ports:
       - "3306:3306"
+```
+
+Монтируем наш конфиг в специальную папку mnt, которая есть в корне любого linux, затем задаём параметры перезапуска.
+
+```
+  mariadb:
+    build:
+      context: .
+      dockerfile: requirements/mariadb/Dockerfile
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./requirements/mariadb/conf/:/mnt"
+    restart: unless-stopped
 ```
 
 Переменные берём из .env - файла, созданного скриптом на этапе создания директорий.
@@ -139,10 +153,8 @@ MYSQL_PASSWORD=1234
     ports:
       - "3306:3306"
     volumes:
-      - "./requirements/mariadb/conf/:/mnt"
-    networks:
-      - local
-    restart: always
+      - "./requirements/mariadb/conf/:/mnt/"
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PWD:   ${MYSQL_ROOT_PWD}
       WP_DATABASE_NAME: ${WP_DATABASE_NAME}
@@ -150,3 +162,10 @@ MYSQL_PASSWORD=1234
       WP_DATABASE_PWD:  ${WP_DATABASE_PWD}
 ```
 
+И таким образом вся наша рабочая конфигурация на текущий момент выглядит следующим образом:
+
+```
+
+```
+
+И на момент с

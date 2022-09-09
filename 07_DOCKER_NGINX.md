@@ -205,6 +205,10 @@ services:
 Далее мы говорим докеру, где лежит наш Dockerfile:
 
 ```
+version: '3'
+
+services:
+  nginx:
     build:
       context: .
       dockerfile: requirements/nginx/Dockerfile
@@ -213,6 +217,13 @@ services:
 Задаём имя нашему контейнеру, а так же пробрасываем нужный порт (в этом задании мы можем использовать только ssl):
 
 ```
+version: '3'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: requirements/nginx/Dockerfile
     container_name: nginx
     ports:
       - "443:443"
@@ -221,6 +232,16 @@ services:
 Добавляем разделы, чтобы контейнер увидел наш конфиг и наши ключи, а так же обязательно монтируем наш /var/www - ту самую папку из старой конфигурации, которая понадобится нам для пробного запуска nginx. Позже мы удалим её и будем брать файлы из каталога wordpress-а.
 
 ```
+version: '3'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: requirements/nginx/Dockerfile
+    container_name: nginx
+    ports:
+      - "443:443"
     volumes:
       - ./requirements/nginx/conf/:/etc/nginx/conf.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
