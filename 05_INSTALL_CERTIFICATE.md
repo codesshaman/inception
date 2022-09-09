@@ -172,7 +172,7 @@ services:
     volumes:
       - ./public:/var/www/public/
       - ./nginx/conf.d:/etc/nginx/conf.d/
-      - /home/user/project/srcs/requirements/tools:/etc/nginx/ssl/
+      - /home/jleslee/project/srcs/requirements/tools:/etc/nginx/ssl/
     restart: unless-stopped
     ports:
       - "80:80"

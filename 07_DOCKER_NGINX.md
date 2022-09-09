@@ -187,9 +187,9 @@ server {
 
 Docker-compose - это система запуска контейнеров docker, можно сказать, это некая надстройка над docker. Если в docker-файлах мы прописывали, какой софт установить внутри одного контейнерного окружения, то с docker-compose мы можем управлять запуском сразу множества подобных контейнеров, запуская их одной командой.
 
-Для этого переходим на два уровня выше (```../../```) и правим наш уже созданный docker-compose файл:
+Для этого переходим на два уровня выше (``../../``) и правим наш уже созданный docker-compose файл:
 
-```nano docker-compose.yml```
+```cd ../../ && nano docker-compose.yml```
 
 Сначала прописываем версию. Последняя версия - третья.
 
@@ -245,7 +245,7 @@ services:
     volumes:
       - ./requirements/nginx/conf/:/etc/nginx/conf.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
-      - /home/user/simple_docker_nginx_html/public/html:/var/www/html/
+      - /home/jleslee/simple_docker_nginx_html/public/html:/var/www/html/
 ```
 
 Дальше мы прописываем тип перезапуска (всегда, за исключением команды остановки):
@@ -270,7 +270,7 @@ services:
     volumes:
       - ./requirements/nginx/conf/:/etc/nginx/conf.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
-      - /home/user/simple_docker_nginx_html/public/html:/var/www/html/
+      - /home/jleslee/simple_docker_nginx_html/public/html:/var/www/html/
     restart: unless-stopped
 ```
 
