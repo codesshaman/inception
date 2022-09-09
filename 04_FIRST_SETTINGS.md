@@ -97,10 +97,10 @@ mkdir project/srcs/requirements
 touch project/srcs/docker-compose.yml
 touch project/srcs/.env
 echo "DOMAIN_NAME=jleslee.42.fr" > project/srcs/.env
-echo "CERT_=./project/srcs/requirements/tools/jleslee.42.fr.crt" >> project/srcs/.env
-echo "KEY_=./project/srcs/requirements/tools/jleslee.42.fr.key" >> project/srcs/.env
+echo "CERT_=./requirements/tools/jleslee.42.fr.crt" >> project/srcs/.env
+echo "KEY_=./requirements/tools/jleslee.42.fr.key" >> project/srcs/.env
 echo "MYSQL_ROOT_PASSWORD=123456" >> project/srcs/.env
-echo "MYSQL_USER=user" >> project/srcs/.env
+echo "MYSQL_USER=dbuser" >> project/srcs/.env
 echo "MYSQL_PASSWORD=1234" >> project/srcs/.env
 mkdir project/srcs/requirements/bonus
 mkdir project/srcs/requirements/mariadb
