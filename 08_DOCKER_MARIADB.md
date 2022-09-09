@@ -20,7 +20,7 @@
 
 ![настройка mariadb](media/docker_mariadb/step_0.png)
 
-А всё того же, что от настроек nginx. Dockerfile и какие-нибудь конфигурации. Что хранить в папке tools я не представляю, видимо фантазия у французов развита несколько лучше, чем у русских разработчиков. Я не сторонник различных вынесений баз данных или логов за пределы контейнера с последующими мучениями вокруг прав доступа на эти файлы, потому папку tools я пока оставлю нетронутой.
+А всё того же, что от настроек nginx. Dockerfile и какие-нибудь конфигурации. Что хранить в папке tools я не представляю, видимо фантазия у французов развита несколько лучше, чем у русских разработчиков. Я не сторонник различных вынесений баз данных или логов за пределы контейнера с последующими мучениями вокруг прав доступа на эти файлы, потому папку tools я оставлю нетронутой.
 
 Но вот папку conf мы задействуем для конфигурации запуска mariadb:
 
@@ -79,11 +79,15 @@ FROM alpine:latest
 RUN	apk update && apk upgrade && apk add --no-cache \
         mariadb \
         mariadb-client
-COPY conf/start.sh /tmp/start.sh
-CMD ["sh", "/tmp/start.sh"]
+EXPOSE 3306
+
+CMD ["sh", "/mnt/start.sh"]
 ```
 
-Как видим, всё предельно просто. Теперь опишем то, как мы будем запускать это в docker-compose.
+Как видим, всё предельно просто. Устанавливаем пакеты mariadb и mariadb-client (кстати, вместо mysql в alpine теперь mariadb, и установка пакетов mysql даст абсолютно такой же результат), открываем рабочий порт - 3306, и запускаем наш скрипт из примонтированной директории.
+
+
+Теперь опишем то, как мы будем запускать это в docker-compose.
 
 ## Шаг 3. Создание docker-compose секции
 
@@ -91,7 +95,21 @@ CMD ["sh", "/tmp/start.sh"]
 
 ```nano docker-compose.yml```
 
-Теперь ниже нашего nginx опишем секцию с нашей Машей. Переменные берём из .env - файла, созданного скриптом на этапе создания директорий.
+Теперь ниже нашего nginx опишем секцию с нашей Машей. 
+
+Сначала делаем всё то же самое: описываем сервис, указываем путь к Dockerfile, задаём имя контейнера и открываем порты:
+
+```
+  mariadb:
+    build:
+      context: .
+      dockerfile: requirements/mariadb/Dockerfile
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+```
+
+Переменные берём из .env - файла, созданного скриптом на этапе создания директорий.
 
 Посмотрим, что в нашем файле .env:
 
@@ -114,14 +132,16 @@ MYSQL_PASSWORD=1234
 
 ```
   mariadb:
-    build: requirements/mariadb/
+    build:
+      context: .
+      dockerfile: requirements/mariadb/Dockerfile
     container_name: mariadb
     ports:
       - "3306:3306"
     volumes:
-      - "~/Desktop/inception/mariadb:/var/lib/mysql"
+      - "./requirements/mariadb/conf/:/mnt"
     networks:
-      - backend
+      - local
     restart: always
     environment:
       MYSQL_ROOT_PWD:   ${MYSQL_ROOT_PWD}

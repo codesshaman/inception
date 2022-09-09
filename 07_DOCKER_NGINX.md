@@ -210,9 +210,10 @@ services:
       dockerfile: requirements/nginx/Dockerfile
 ```
 
-Пробрасываем нужный порт (в этом задании мы можем использовать только ssl):
+Задаём имя нашему контейнеру, а так же пробрасываем нужный порт (в этом задании мы можем использовать только ssl):
 
 ```
+    container_name: nginx
     ports:
       - "443:443"
 ```
@@ -226,11 +227,10 @@ services:
       - /home/user/simple_docker_nginx_html/public/html:/var/www/html/
 ```
 
-Дальше мы прописываем тип перезапуска (всегда, за исключением команды остановки) и задаём контейнеру имя:
+Дальше мы прописываем тип перезапуска (всегда, за исключением команды остановки):
 
 ```
     restart: unless-stopped
-    container_name: nginx
 ```
 
 И таким образом мы имеем следующую конфигурацию:
@@ -243,6 +243,7 @@ services:
     build:
       context: .
       dockerfile: requirements/nginx/Dockerfile
+    container_name: nginx
     ports:
       - "443:443"
     volumes:
@@ -250,7 +251,6 @@ services:
       - ./requirements/nginx/tools:/etc/nginx/ssl/
       - /home/user/simple_docker_nginx_html/public/html:/var/www/html/
     restart: unless-stopped
-    container_name: nginx
 ```
 
 Не забываем выключить тестовую конфигурацию:
