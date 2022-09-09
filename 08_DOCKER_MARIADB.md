@@ -93,6 +93,25 @@ CMD ["sh", "/tmp/start.sh"]
 
 Теперь ниже нашего nginx опишем секцию с нашей Машей. Переменные берём из .env - файла, созданного скриптом на этапе создания директорий.
 
+Посмотрим, что в нашем файле .env:
+
+```cd ~/project/srcs/ && cat .env```
+
+И увидим следующий вывод:
+
+```
+DOMAIN_NAME=jleslee.42.fr
+CERT_=./requirements/tools/jleslee.42.fr.crt
+KEY_=./requirements/tools/jleslee.42.fr.key
+MYSQL_ROOT_PASSWORD=123456
+MYSQL_USER=dbuser
+MYSQL_PASSWORD=1234
+```
+
+Копируем названия некоторых наших переменных в docker-compose, снабдив их $ и скобками:
+
+```nano docker-compose.yml```
+
 ```
   mariadb:
     build: requirements/mariadb/
@@ -110,3 +129,4 @@ CMD ["sh", "/tmp/start.sh"]
       WP_DATABASE_USR:  ${WP_DATABASE_USR}
       WP_DATABASE_PWD:  ${WP_DATABASE_PWD}
 ```
+
