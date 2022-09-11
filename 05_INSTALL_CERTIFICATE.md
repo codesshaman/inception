@@ -159,7 +159,7 @@ server {
 
 В раздел volumes добавляем ещё один раздел с нашими ключами:
 
-```- /home/jleslee/project/srcs/requirements/tools:/etc/nginx/ssl```, где jleslee - наше имя пользователя.
+```- /home/${USER}/project/srcs/requirements/tools:/etc/nginx/ssl```, где ${USER} - переменная, которая подставит сюда имя нашего пользователя из окружения $PATH.
 
 В общем, позаботимся о том, чтобы пути к сертификатам были прописаны правильно, а так же откроем порт 443 в разделе ports:
 
@@ -172,7 +172,7 @@ services:
     volumes:
       - ./public:/var/www/public/
       - ./nginx/conf.d:/etc/nginx/conf.d/
-      - /home/jleslee/project/srcs/requirements/tools:/etc/nginx/ssl/
+      - /home/${USER}/project/srcs/requirements/tools:/etc/nginx/ssl/
     restart: unless-stopped
     ports:
       - "80:80"
