@@ -118,6 +118,11 @@ touch project/srcs/requirements/nginx/Dockerfile
 echo ".git" > project/srcs/requirements/mariadb/.dockerignore
 mkdir project/srcs/requirements/tools
 mkdir project/srcs/requirements/wordpress
+mkdir project/srcs/requirements/wordpress/conf
+mkdir project/srcs/requirements/wordpress/tools
+touch project/srcs/requirements/wordpress/Dockerfile
+touch project/srcs/requirements/wordpress/.dockerignore
+echo ".git" > project/srcs/requirements/wordpress/.dockerignore
 ```
 
 > Не забываем менять jleslee на свой ник!
