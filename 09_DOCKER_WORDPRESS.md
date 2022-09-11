@@ -72,10 +72,12 @@ RUN wget https://wordpress.org/latest.zip && \
     unzip latest.zip && \
     cp -rf wordpress/* . && \
     rm -rf wordpress latest.zip
+CMD ["/usr/sbin/php-fpm8", "-F"]
 ```
 
 В последней инструкции RUN мы загрузили wget-ом последнюю версию wordpress, разархивировали её и удалили все исходные файлы.
 
+CMD же запускает наш установленный php-fpm (внимание: версия должна соответствовать установленной!)
 
 ## Шаг 2. Конфигурация docker-compose
 
@@ -148,7 +150,25 @@ networks:
 
 Так же заменим нашу проверочную папку в конфигурации nginx-а на постоянное подключение к wordpress.
 
-Таким образом вся наша конфигурация будет выглядеть так:
+## Шаг 4. Создание разделов
+
+У nginx и wordpress должен быть общий раздел для обмена данными. Можно примонтировать туда и туда одну и ту же папку, но для удобства создадим раздел, указав путь к этой папке:
+
+```
+volumes:
+  wordpress:
+    name: wp-volume
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/${USER}/wordpress
+```
+
+Так же создадим папку wordpress в домашнем каталоге:
+
+``mkdir ~/wordpress``
+
+Теперь добавим этот раздел ко всем контейнерам, которые от него зависят. Таким образом вся наша конфигурация будет выглядеть так:
 
 ```
 version: '3'
@@ -164,7 +184,7 @@ services:
     volumes:
       - ./requirements/nginx/conf/:/etc/nginx/conf.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
-      - ./requirements/wordpress/conf/:/var/www/
+      - wp-volume:/var/www/
     restart: unless-stopped
     networks:
       - wp-network
@@ -195,7 +215,7 @@ services:
       - mariadb
     restart: unless-stopped
     volumes:
-      - ./requirements/wordpress/conf/:/var/www/
+      - wp-volume:/var/www/
     container_name: wordpress
     networks:
       - wp-network
@@ -203,9 +223,18 @@ services:
 networks:
   wp-network:
     driver: bridge
+
+volumes:
+  wp-volume:
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/${USER}/wordpress
 ```
 
 ## Шаг 3. Изменение конфигурации nginx
+
+Нам необходимо изменить конфигурацию nginx-а чтобы тот обрабатывал только php-файлы. Для этого удалим из конфига все index.html.
 
 Для полного счастья нам осталось раскомментировать блок nginx-а, обрабатывающий php, чтобы наш nginx.conf выглядел следующим образом:
 
@@ -215,7 +244,7 @@ server {
     listen      443 ssl;
     server_name  jleslee.42.fr www.jleslee.42.fr;
     root    /var/www/;
-    index index.php index.html;
+    index index.php;
 #   if ($scheme = 'http') {
 #       return 301 https://jleslee.42.fr$request_uri;
 #   }
@@ -226,7 +255,7 @@ server {
     ssl_session_timeout 10m;
     keepalive_timeout 70;
     location / {
-        try_files $uri /index.php?$args /index.html;
+        try_files $uri /index.php?$args;
         add_header Last-Modified $date_gmt;
         add_header Cache-Control 'no-store, no-cache';
         if_modified_since off;
