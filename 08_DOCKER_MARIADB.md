@@ -281,3 +281,11 @@ services:
 ![настройка mariadb](media/docker_mariadb/step_4.png)
 
 И на этом мы можем считать нашу работу законченной.
+
+Если после этого шага нужно сделать снапшот, я бы для начала очистил все имеющиеся образы:
+
+```cd ~/project/srcs/```
+
+``docker-compose down``
+
+``docker system prune --a``
