@@ -245,7 +245,7 @@ services:
     volumes:
       - ./requirements/nginx/conf/:/etc/nginx/conf.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
-      - /home/jleslee/simple_docker_nginx_html/public/html:/var/www/
+      - /home/${USER}/simple_docker_nginx_html/public/html:/var/www/
 ```
 
 Дальше мы прописываем тип перезапуска (всегда, за исключением команды остановки):
@@ -270,7 +270,7 @@ services:
     volumes:
       - ./requirements/nginx/conf/:/etc/nginx/conf.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
-      - /home/jleslee/simple_docker_nginx_html/public/html:/var/html/
+      - /home/${USER}/simple_docker_nginx_html/public/html:/var/html/
     restart: unless-stopped
 ```
 
