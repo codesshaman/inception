@@ -145,7 +145,7 @@ server {
     listen      80;
     listen      443 ssl;
     server_name  jleslee.42.fr www.jleslee.42.fr;
-    root    /var/www/html;
+    root    /var/www/;
     index index.php index.html;
 #   if ($scheme = 'http') {
 #       return 301 https://jleslee.42.fr$request_uri;
@@ -245,7 +245,7 @@ services:
     volumes:
       - ./requirements/nginx/conf/:/etc/nginx/conf.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
-      - /home/jleslee/simple_docker_nginx_html/public/html:/var/www/html/
+      - /home/jleslee/simple_docker_nginx_html/public/html:/var/www/
 ```
 
 Дальше мы прописываем тип перезапуска (всегда, за исключением команды остановки):
@@ -270,7 +270,7 @@ services:
     volumes:
       - ./requirements/nginx/conf/:/etc/nginx/conf.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
-      - /home/jleslee/simple_docker_nginx_html/public/html:/var/www/html/
+      - /home/jleslee/simple_docker_nginx_html/public/html:/var/html/
     restart: unless-stopped
 ```
 
