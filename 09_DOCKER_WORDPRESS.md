@@ -83,7 +83,7 @@ RUN wget https://wordpress.org/latest.zip && \
 
 Для начала пропишем 
 
-``
+```
     wordpress:
         depends_on:
             - mariadb
@@ -106,7 +106,7 @@ RUN wget https://wordpress.org/latest.zip && \
         networks:
             vpcbr:
         env_file: .env
-``
+```
 
 
 
