@@ -20,7 +20,7 @@
 
 ![настройка mariadb](media/docker_mariadb/step_0.png)
 
-А всё того же, что от настроек nginx. Dockerfile и какие-нибудь конфигурации. Что хранить в папке tools я не представляю, видимо фантазия у французов развита несколько лучше, чем у русских разработчиков. Я не сторонник различных вынесений баз данных или логов за пределы контейнера с последующими мучениями вокруг прав доступа на эти файлы, потому папку tools я оставлю нетронутой.
+А всё того же, что от настроек nginx. Dockerfile и какие-нибудь конфигурации. Что хранить в папке tools я не представляю, видимо фантазия у французов развита несколько лучше, чем у русских разработчиков. Я не сторонник различных вынесений баз данных или логов за пределы контейнера с последующими мучениями вокруг прав доступа на эти файлы, да и скрипт создания баз под wordpress мне кажется не самой лучшей идеей - wordpress сам создаст всё, что ему нужно, при установке. А потому папку tools я оставлю нетронутой.
 
 Но вот папку conf мы задействуем для конфигурации запуска mariadb:
 
@@ -32,21 +32,47 @@
 
 ```
 #!/bin/bash
-
-mysql -uroot <<MYSQL_SCRIPT
-CREATE DATABASE test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'test'@'localhost' IDENTIFIED BY '1234';
-GRANT ALL PRIVILEGES ON test.* TO 'test'@'localhost';
+if [ ! -d "/run/mysqld" ]; then
+	echo "Run1 is work"
+	mkdir -p /run/mysqld
+	chown -R mysql:mysql /run/mysqld
+fi
+if [ ! -d "/var/lib/mysql/mysql" ]; then
+	echo "Run 2 is work!"
+	chown -R mysql:mysql /var/lib/mysql
+	mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql --rpm > /dev/null
+	tfile=`mktemp`
+	if [ ! -f "$tfile" ]; then
+		return 1
+	fi
+	cat << EOF > $tfile
+USE mysql;
 FLUSH PRIVILEGES;
-MYSQL_SCRIPT
-
-echo "MySQL database created."
-echo "Database:   test"
-echo "Username:   test"
-echo "Password:   1234"
+DELETE FROM	mysql.user WHERE User='';
+DROP DATABASE test;
+DELETE FROM mysql.db WHERE Db='test';
+DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
+CREATE DATABASE $WP_DATABASE_NAME CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE USER '$WP_DATABASE_USR'@'%' IDENTIFIED by '$WP_DATABASE_PWD';
+GRANT ALL PRIVILEGES ON $WP_DATABASE_NAME.* TO '$WP_DATABASE_USR'@'%';
+FLUSH PRIVILEGES;
+EOF
+	/usr/bin/mysqld --user=mysql --bootstrap < $tfile
+	rm -f $tfile
+fi
+sed -i "s|skip-networking|# skip-networking|g" /etc/my.cnf.d/mariadb-server.cnf
+sed -i "s|.*bind-address\s*=.*|bind-address=0.0.0.0|g" /etc/my.cnf.d/mariadb-server.cnf
+exec /usr/bin/mysqld --user=mysql --console
 ```
 
-Скрипт создаст тестовую базу, проверив нашу Машу на работоспособность.
+Скрипт возьмёт переменные окружения, которые хранятся нами в .env файле, удалит лишние хосты из бд, создаст базу данных и пользователя с паролем для wordpress.
+
+В данном случае мы имеем пример грамотного хранения секретов (именно так называют токены, ключи, пароли и прочую важную информацию, которая не должна попасть к третьим лицам.) внутри .env файла.
+
+Но для полного счастья нам нужно добавить .env в тот самый .dockerignore:
+
+
 
 ## Шаг 2. Создание Dockerfile
 
@@ -138,10 +164,10 @@ MYSQL_PASSWORD=1234
       - "./requirements/mariadb/conf/:/mnt/"
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PWD:   ${MYSQL_ROOT_PWD}
-      WP_DATABASE_NAME: ${WP_DATABASE_NAME}
-      WP_DATABASE_USR:  ${WP_DATABASE_USR}
-      WP_DATABASE_PWD:  ${WP_DATABASE_PWD}
+      MYSQL_ROOT_PWD:   ${MYSQL_ROOT_PASSWORD}
+      WP_DATABASE_NAME: wordpress
+      WP_DATABASE_USR:  ${MYSQL_USER}
+      WP_DATABASE_PWD:  ${MYSQL_PASSWORD}
 ```
 
 И таким образом вся наша рабочая конфигурация на текущий момент выглядит следующим образом:
@@ -174,10 +200,10 @@ services:
       - "./requirements/mariadb/conf/:/mnt/"
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PWD:   ${MYSQL_ROOT_PWD}
-      WP_DATABASE_NAME: ${WP_DATABASE_NAME}
-      WP_DATABASE_USR:  ${WP_DATABASE_USR}
-      WP_DATABASE_PWD:  ${WP_DATABASE_PWD}
+      MYSQL_ROOT_PWD:   ${MYSQL_ROOT_PASSWORD}
+      WP_DATABASE_NAME: wordpress
+      WP_DATABASE_USR:  ${MYSQL_USER}
+      WP_DATABASE_PWD:  ${MYSQL_PASSWORD}
 ```
 
 Запустим и проверим её работу:

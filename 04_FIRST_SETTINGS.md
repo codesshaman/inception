@@ -110,11 +110,12 @@ mkdir project/srcs/requirements/mariadb/conf
 mkdir project/srcs/requirements/mariadb/tools
 touch project/srcs/requirements/mariadb/Dockerfile
 touch project/srcs/requirements/mariadb/.dockerignore
+echo ".git" > project/srcs/requirements/mariadb/.dockerignore
 mkdir project/srcs/requirements/nginx
 mkdir project/srcs/requirements/nginx/conf
 mkdir project/srcs/requirements/nginx/tools
 touch project/srcs/requirements/nginx/Dockerfile
-touch project/srcs/requirements/nginx/.dockerignore
+echo ".git" > project/srcs/requirements/mariadb/.dockerignore
 mkdir project/srcs/requirements/tools
 mkdir project/srcs/requirements/wordpress
 ```
