@@ -186,7 +186,7 @@ services:
     volumes:
       - ./requirements/nginx/conf/:/etc/nginx/conf.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
-      - /home/user/simple_docker_nginx_html/public/html:/var/html/
+      - /home/user/simple_docker_nginx_html/public/html:/var/www/
     restart: unless-stopped
 
   mariadb:
