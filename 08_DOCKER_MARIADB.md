@@ -33,12 +33,10 @@
 ```
 #!/bin/bash
 if [ ! -d "/run/mysqld" ]; then
-	echo "Run1 is work"
 	mkdir -p /run/mysqld
 	chown -R mysql:mysql /run/mysqld
 fi
 if [ ! -d "/var/lib/mysql/mysql" ]; then
-	echo "Run 2 is work!"
 	chown -R mysql:mysql /var/lib/mysql
 	mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql --rpm > /dev/null
 	tfile=`mktemp`
