@@ -1,5 +1,25 @@
 # Создание контейнера wordpress
 
+Для общего понимания сделаем небольшое ревью задачи, разбив её на подзадачу.
+
+Сначала выпишем список того, что нам нужно для контейнера. Это:
+
+- php с плагинами для работы wordpress
+- php-fpm для связи с nginx
+- сам wordpress. Просто так, чтобы было.
+
+Для настройки нам потребуется выполнить следующие действия:
+
+- установить через Dockerfile php со всеми плагинами
+- установить через Dockerfile все необходимые программы
+- скачать и положить в /var/www сам вордпресс, так же через Dockerfile
+- подсунуть в контейнер правильный конфиг fastcgi (www.conf)
+- запустить в контейнере fastcgi через сокет php-fpm
+- добавить все необходимые разделы в docker-compose
+- установить порядок запуска контейнеров
+- добавить раздел с wordpress контейнеру с nginx
+- тестить чтобы всё работало
+
 ## Шаг 1. Настройка Dockerfile
 
 Итак, мы переходим к настройке wordpress.  Действуем всё так же: берём за основу последний alpine и накатываем на него нужный нам софт.
@@ -112,47 +132,43 @@ CMD же запускает наш установленный php-fpm (вним�
     container_name: wordpress
 ```
 
-А далее нам нужно подсоединить наш вордпресс к внутренней сети, по которой и будут передаваться данные между ним и базой. Пропишем эту сеть:
+## Шаг 3. Конфигурация php-fpm
+
+А теперь мы создадим конфиг www.conf чтобы наш fastcgi слушал нас по порту 9000.
+
+``nano requirements/wordpress/conf/www.conf``
+
+По факту здесь всё просто, все параметры легко гуглятся:
 
 ```
-  wordpress:
-    build:
-      context: .
-      dockerfile: requirements/wordpress/Dockerfile
-    depends_on:
-      - mariadb
-    restart: unless-stopped
+[www]
+user = nobody
+group = nobody
+listen = 9000
+listen.owner = nobody
+listen.group = nobody
+pm = dynamic
+pm.max_children = 5
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 3
+```
+
+Далее добавим этото конфиг в папку нашего любимого демона php-fpm (как мы помним, демоны - это фоновые службы linxu).
+
+Для этого просто добавим контейнеру wordpress следующие разделы (wp-volume создадим на следующем шаге):
+
+```
     volumes:
-      - ./requirements/wordpress/conf/:/var/www/
-    container_name: wordpress
-	networks:
-      - wp-network
+          - wp-volume:/var/www/
+          - ./requirements/wordpress/conf:/etc/php8/php-fpm.d/
 ```
 
-## Шаг 3. Создание сети
-
-А теперь мы создадим общую сеть, в которую добавим все контейнеры нашей конфигурации.
-
-Сначала пропишем в конце docker-compose файла нашу сеть:
-
-```
-networks:
-  wp-network:
-    driver: bridge
-```
-
-Далее добавим эту сеть нашим контейнерам с nginx и mariadb, просто приписав им директиву network:
-
-```
-networks:
-    - wp-network
-```
-
-Так же заменим нашу проверочную папку в конфигурации nginx-а на постоянное подключение к wordpress.
+> Обратите внимание, что при иной версии php путь может отличаться. Можно просмотреть пути в уже поднятом контейнере.
 
 ## Шаг 4. Создание разделов
 
-У nginx и wordpress должен быть общий раздел для обмена данными. Можно примонтировать туда и туда одну и ту же папку, но для удобства создадим раздел, указав путь к этой папке:
+У nginx и wordpress должен быть общий раздел для обмена данными. Можно примонтировать туда и туда одну и ту же папку, но для удобства создадим раздел, указав путь к его папке:
 
 ```
 volumes:
@@ -186,8 +202,6 @@ services:
       - ./requirements/nginx/tools:/etc/nginx/ssl/
       - wp-volume:/var/www/
     restart: unless-stopped
-    networks:
-      - wp-network
 
   mariadb:
     build:
@@ -204,8 +218,6 @@ services:
       WP_DATABASE_NAME: wordpress
       WP_DATABASE_USR:  ${MYSQL_USER}
       WP_DATABASE_PWD:  ${MYSQL_PASSWORD}
-    networks:
-      - wp-network
 
   wordpress:
     build:
@@ -216,13 +228,8 @@ services:
     restart: unless-stopped
     volumes:
       - wp-volume:/var/www/
+      - ./requirements/wordpress/conf:/etc/php8/php-fpm.d/
     container_name: wordpress
-    networks:
-      - wp-network
-
-networks:
-  wp-network:
-    driver: bridge
 
 volumes:
   wp-volume:
@@ -232,7 +239,7 @@ volumes:
       device: /home/${USER}/wordpress
 ```
 
-## Шаг 3. Изменение конфигурации nginx
+## Шаг 5. Изменение конфигурации nginx
 
 Нам необходимо изменить конфигурацию nginx-а чтобы тот обрабатывал только php-файлы. Для этого удалим из конфига все index.html.
 
@@ -244,7 +251,7 @@ server {
     listen      443 ssl;
     server_name  jleslee.42.fr www.jleslee.42.fr;
     root    /var/www/;
-    index index.php;
+    index index.php index.html;
 #   if ($scheme = 'http') {
 #       return 301 https://jleslee.42.fr$request_uri;
 #   }
@@ -255,7 +262,7 @@ server {
     ssl_session_timeout 10m;
     keepalive_timeout 70;
     location / {
-        try_files $uri /index.php?$args;
+        try_files $uri /index.php?$args /index.html;
         add_header Last-Modified $date_gmt;
         add_header Cache-Control 'no-store, no-cache';
         if_modified_since off;
@@ -274,30 +281,6 @@ server {
 ```
 
 Вот теперь вроде бы всё, наша конфигурация готова к запуску.
-
-
-## Шаг 4. Конфигурация wordpress
-
-Напишем тот самый конфиг start.sh для конфигурации wordpress:
-
-```
-#!/bin/sh
-sleep 1;
-if  [ ! -f /var/www/wordpress/wp-config.php ]; then 
-    
-    wp core --allow-root download --locale=ru_RU --force 
-    sleep 2;
-    while  [ ! -f /var/www/wordpress/wp-config.php ]; do   
-        wp core config --allow-root --dbname=wordpress --dbuser=$MARIA_LOGIN --dbpass=$MARIA_PASS --dbhost=mariadb:3306
-    done 
-    wp core install --allow-root --url='lusehair.42.fr' --title='WordPress for Inception' --admin_user=$WP_LOGIN --admin_password=$WP_PASS  --admin_email="admin@admin.fr" --path='/var/www/wordpress';
-    wp  user create --allow-root $WPU_1LOGIN user2@user.com --user_pass=$WPU_1PASS --role=author
-    wp theme install --allow-root dark-mode --activate     
-fi 
-php-fpm8 --nodaemonize
-```
-
-Чтобы проверить, что всё запущено правильно, передадим в контейнер команду
 
 ``docker exec -it wordpress ps aux | grep 'php'``
 
@@ -346,3 +329,43 @@ zlib
 
 [Zend Modules]
 ```
+
+...и вуфля!
+
+![настройка wordpress](media/work_wp.png)
+
+И настраивать готовый wordpress.
+
+## Шаг 6. Изменение Makefile
+
+Так же не забываем копировать наш Makefile. Его придётся немного изменить, потому как docker-compose у нас лежит по пути srcs:
+
+```
+name = inception
+all:
+	@printf "Launch configuration ${name}...\n"
+	@docker-compose -f ./srcs/docker-compose.yml up -d
+
+down:
+	@printf "Stopping configuration ${name}...\n"
+	@docker-compose -f ./srcs/docker-compose.yml down
+
+re:
+	@printf "Rebuild configuration ${name}...\n"
+	@docker-compose -f ./srcs/docker-compose.yml up -d --build
+
+clean: down
+	@printf "Cleaning configuration ${name}...\n"
+	@docker system prune --a
+
+fclean:
+	@printf "Total clean of all configurations docker\n"
+	@docker stop $$(docker ps -qa)
+	@docker system prune --all --force --volumes
+	@docker network prune --force
+	@docker volume prune --force
+
+.PHONY	: all down re clean fclean
+```
+
+Перед сохранением в облако советую сделать make fclean
