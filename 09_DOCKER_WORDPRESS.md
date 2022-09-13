@@ -297,3 +297,52 @@ fi
 php-fpm8 --nodaemonize
 ```
 
+Чтобы проверить, что всё запущено правильно, передадим в контейнер команду
+
+``docker exec -it wordpress ps aux | grep 'php'``
+
+Вывод должен быть следующим:
+
+```
+    1 root      0:00 {php-fpm8} php-fpm: master process (/etc/php8/php-fpm.conf
+    9 nobody    0:00 {php-fpm8} php-fpm: pool www
+   10 nobody    0:00 {php-fpm8} php-fpm: pool www
+```
+
+``docker exec -it wordpress php -v``
+
+```
+PHP 8.0.22 (cli) (built: Aug  5 2022 23:54:32) ( NTS )
+Copyright (c) The PHP Group
+Zend Engine v4.0.22, Copyright (c) Zend Technologies
+```
+
+``docker exec -it wordpress php -m``
+
+```
+[PHP Modules]
+Core
+curl
+date
+dom
+exif
+fileinfo
+filter
+hash
+json
+libxml
+mbstring
+mysqli
+mysqlnd
+openssl
+pcre
+readline
+Reflection
+SPL
+standard
+xml
+zip
+zlib
+
+[Zend Modules]
+```
