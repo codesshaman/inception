@@ -22,7 +22,7 @@
 
 После этого установим нужные нам приложения следующей командой:
 
-```apt install -y sudo ufw docker docker-compose openbox xinit kitty firefox-esr```
+```apt install -y sudo ufw docker docker-compose make openbox xinit kitty firefox-esr```
 
 Мы будем вводить эту команду вручную, так как в виртуальную машину нельзя копипастить. Позже мы откроем порты и подключимся к виртуальной машине через консоль, как к локальному серверу.
 
