@@ -251,7 +251,7 @@ server {
     listen      443 ssl;
     server_name  jleslee.42.fr www.jleslee.42.fr;
     root    /var/www/;
-    index index.php index.html;
+    index index.php;
 #   if ($scheme = 'http') {
 #       return 301 https://jleslee.42.fr$request_uri;
 #   }
@@ -262,7 +262,7 @@ server {
     ssl_session_timeout 10m;
     keepalive_timeout 70;
     location / {
-        try_files $uri /index.php?$args /index.html;
+        try_files $uri /index.php?$args;
         add_header Last-Modified $date_gmt;
         add_header Cache-Control 'no-store, no-cache';
         if_modified_since off;
@@ -334,8 +334,6 @@ zlib
 
 ![настройка wordpress](media/work_wp.png)
 
-И настраивать готовый wordpress.
-
 ## Шаг 6. Изменение Makefile
 
 Так же не забываем копировать наш Makefile. Его придётся немного изменить, потому как docker-compose у нас лежит по пути srcs:
@@ -368,4 +366,9 @@ fclean:
 .PHONY	: all down re clean fclean
 ```
 
-Перед сохранением в облако советую сделать make fclean
+Перед сохранением в облако советую сделать make fclean.
+
+Теперь мы можем переходить в браузер macos настраивать готовый wordpress:
+
+``https://127.0.0.1/``
+
