@@ -138,9 +138,9 @@ CMD ["sh", "/mnt/start.sh"]
 И увидим следующий вывод:
 
 ```
-DOMAIN_NAME=jleslee.42.fr
-CERT_=./requirements/tools/jleslee.42.fr.crt
-KEY_=./requirements/tools/jleslee.42.fr.key
+DOMAIN_NAME=<your_nickname>.42.fr
+CERT_=./requirements/tools/<your_nickname>.42.fr.crt
+KEY_=./requirements/tools/<your_nickname>.42.fr.key
 MYSQL_ROOT_PASSWORD=123456
 MYSQL_USER=dbuser
 MYSQL_PASSWORD=1234

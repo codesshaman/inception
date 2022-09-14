@@ -34,17 +34,17 @@
 
 Вот так выглядит список групп нашего пользователя сейчас:
 
- ```groups jleslee```
+ ```groups <your_nickname>```
 
 ![Настройка Docker](media/setting_docker/step_0.png)
 
 Добавим же нашего пользователя в группу командой 
 
-```usermod -aG docker jleslee```
+```usermod -aG docker <your_nickname>```
 
 И проверим, что добавление произошло:
 
-```groups jleslee```
+```groups <your_nickname>```
 
 ![Настройка Docker](media/setting_docker/step_1.png)
 
@@ -54,7 +54,7 @@
 
 Так переключимся же на нашего пользователя и перейдём в его домашний каталог:
 
-```su jleslee```
+```su <your_nickname>```
 
 ```cd ~/```
 
@@ -98,9 +98,9 @@ touch project/Makefile
 mkdir project/srcs/requirements
 touch project/srcs/docker-compose.yml
 touch project/srcs/.env
-echo "DOMAIN_NAME=jleslee.42.fr" > project/srcs/.env
-echo "CERT_=./requirements/tools/jleslee.42.fr.crt" >> project/srcs/.env
-echo "KEY_=./requirements/tools/jleslee.42.fr.key" >> project/srcs/.env
+echo "DOMAIN_NAME=<your_nickname>.42.fr" > project/srcs/.env
+echo "CERT_=./requirements/tools/<your_nickname>.42.fr.crt" >> project/srcs/.env
+echo "KEY_=./requirements/tools/<your_nickname>.42.fr.key" >> project/srcs/.env
 echo "MYSQL_ROOT_PASSWORD=123456" >> project/srcs/.env
 echo "MYSQL_USER=dbuser" >> project/srcs/.env
 echo "MYSQL_PASSWORD=1234" >> project/srcs/.env
@@ -125,7 +125,7 @@ touch project/srcs/requirements/wordpress/.dockerignore
 echo ".git" > project/srcs/requirements/wordpress/.dockerignore
 ```
 
-> Не забываем менять jleslee на свой ник!
+> Не забываем менять <your_nickname> на свой ник!
 
 Создадим файл с расширением .sh, закинув туда данный код:
 

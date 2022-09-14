@@ -70,7 +70,7 @@
 
 Так работает xserver, в народе "иксы" - если он запущен в терминале, надо открывать окно системы в virtualbox и работать в ней. А ещё проще залогиниться и запустить графику с браузером в virtualbox, а команды выполнять в терминале.
 
-Перейдём в наше графическое окружение в окне virtualbox. Включив веб-браузер, вбиваем туда адрес http://jleslee.42.fr/ заменив jleslee на свой ник. Результат должен быть следующим:
+Перейдём в наше графическое окружение в окне virtualbox. Включив веб-браузер, вбиваем туда адрес http://<your_nickname>.42.fr/ заменив <your_nickname> на свой ник. Результат должен быть следующим:
 
 ![установка сертификата](media/install_certificate/step_2.png)
 
@@ -84,9 +84,9 @@
 
 ```cd ~/project/srcs/requirements/tools/```
 
-Для получения сертификата мы испольузем наш mkcert. Вот так я сгенерирую сертификат для своего домен jleslee.42.fr: 
+Для получения сертификата мы испольузем наш mkcert. Вот так я сгенерирую сертификат для своего домен <your_nickname>.42.fr: 
 
-```mkcert jleslee.42.fr```
+```mkcert <your_nickname>.42.fr```
 
 Получилось следующее:
 
@@ -94,11 +94,11 @@
 
 Как видим, наш сертификат действует более двух лет, и это хорошо.
 
-Единственное, что нужно нам для полного счастья - поменять расширения файлов, чтобы сервер nginx их правильно читал. Используем mv, не забывая сменить jleslee на свой ник:
+Единственное, что нужно нам для полного счастья - поменять расширения файлов, чтобы сервер nginx их правильно читал. Используем mv, не забывая сменить <your_nickname> на свой ник:
 
-```mv jleslee.42.fr-key.pem jleslee.42.fr.key```
+```mv <your_nickname>.42.fr-key.pem <your_nickname>.42.fr.key```
 
-```mv jleslee.42.fr.pem jleslee.42.fr.crt```
+```mv <your_nickname>.42.fr.pem <your_nickname>.42.fr.crt```
 
 И мы имеем в итоге ключ с сертификатом нужных нам форматов.
 
@@ -119,18 +119,18 @@ server {
     # Слушаем порт https - ssl
     listen      443 ssl;
     # Задаём домен, на котором мы будем работать:
-    server_name  jleslee.42.fr www.jleslee.42.fr;
+    server_name  <your_nickname>.42.fr www.<your_nickname>.42.fr;
     # Указываем корневую директорию проекта:
     root    /var/www/public/html;
     # Следующая секция закомментирована для
     # нормальной работы с хостовой машины.
     # Делаем перенаправление с http на https:
     #if ($scheme = 'http') {
-    #    return 301 https://jleslee.42.fr$request_uri;
+    #    return 301 https://<your_nickname>.42.fr$request_uri;
     #}
     # Указываем путь к сертификату и ключу:
-    ssl_certificate     /etc/nginx/ssl/jleslee.42.fr.crt;
-    ssl_certificate_key /etc/nginx/ssl/jleslee.42.fr.key;
+    ssl_certificate     /etc/nginx/ssl/<your_nickname>.42.fr.crt;
+    ssl_certificate_key /etc/nginx/ssl/<your_nickname>.42.fr.key;
     # Указываем поддерживаемые протоколы tls:
     ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
     # Указываем опции кэширования и таймауты:
@@ -149,7 +149,7 @@ server {
 
 ![установка сертификата](media/install_certificate/step_4.png)
 
-Обязательно поменяем в пяти местах jleslee на свой ник! Теперь нам нужно перейти в папку тестового проекта и остановить контейнер:
+Обязательно поменяем в пяти местах <your_nickname> на свой ник! Теперь нам нужно перейти в папку тестового проекта и остановить контейнер:
 
 ```cd ~/simple_docker_nginx_html/ && docker-compose down```
 

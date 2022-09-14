@@ -5,9 +5,9 @@ touch project/Makefile
 mkdir project/srcs/requirements
 touch project/srcs/docker-compose.yml
 touch project/srcs/.env
-echo "DOMAIN_NAME=jleslee.21.school" > project/srcs/.env
-echo "CERT_=./project/srcs/requirements/nginx/conf/jleslee.cert" >> project/srcs/.env
-echo "KEY_=./project/srcs/requirements/nginx/conf/jleslee.key" >> project/srcs/.env
+echo "DOMAIN_NAME=<your_nickname>.21.school" > project/srcs/.env
+echo "CERT_=./project/srcs/requirements/nginx/conf/<your_nickname>.cert" >> project/srcs/.env
+echo "KEY_=./project/srcs/requirements/nginx/conf/<your_nickname>.key" >> project/srcs/.env
 echo "MYSQL_ROOT_PASSWORD=123456" >> project/srcs/.env
 echo "MYSQL_USER=user" >> project/srcs/.env
 echo "MYSQL_PASSWORD=1234" >> project/srcs/.env
