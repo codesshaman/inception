@@ -60,9 +60,39 @@ RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION}-xml \
     php${PHP_VERSION}-zip \
     wget \
-	unzip \
+	  unzip
+```
+
+Далее исправим нужный нам конфиг - конфиг www.conf, чтобы наш fastcgi слушал все соединения по порту 9000 (путь /etc/php8/php-fpm.d/ зависит от установленной версии php!):
+
+```
+FROM alpine:latest
+ARG PHP_VERSION=8
+RUN apk update && apk upgrade && apk add --no-cache \
+    php${PHP_VERSION} \
+    php${PHP_VERSION}-fpm \
+    php${PHP_VERSION}-mysqli \
+    php${PHP_VERSION}-json \
+    php${PHP_VERSION}-curl \
+    php${PHP_VERSION}-dom \
+    php${PHP_VERSION}-exif \
+    php${PHP_VERSION}-fileinfo \
+    php${PHP_VERSION}-mbstring \
+    php${PHP_VERSION}-openssl \
+    php${PHP_VERSION}-xml \
+    php${PHP_VERSION}-zip \
+    wget \
+	  unzip \
+    sed -i "s|listen = 127.0.0.1:9000|listen = 9000|g" \
+    /etc/php8/php-fpm.d/www.conf \
+    sed -i "s|;listen.owner = nobody|listen.owner = nobody|g" \
+    /etc/php8/php-fpm.d/www.conf \
+    sed -i "s|;listen.group = nobody|listen.group = nobody|g" \
+    /etc/php8/php-fpm.d/www.conf \
     && rm -f /var/cache/apk/*
 ```
+
+Принцип тот же, что и в предыдущем гайде. Меняем три строчки конфига sed-ом.
 
 Последней командой мы очищаем кэш установленных модулей.
 
@@ -85,8 +115,14 @@ RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION}-xml \
     php${PHP_VERSION}-zip \
     wget \
-	unzip \
-    && rm -f /var/cache/apk/*
+	  unzip && \
+    sed -i "s|listen = 127.0.0.1:9000|listen = 9000|g" \
+      /etc/php8/php-fpm.d/www.conf && \
+    sed -i "s|;listen.owner = nobody|listen.owner = nobody|g" \
+      /etc/php8/php-fpm.d/www.conf && \
+    sed -i "s|;listen.group = nobody|listen.group = nobody|g" \
+      /etc/php8/php-fpm.d/www.conf && \
+    rm -f /var/cache/apk/*
 WORKDIR /var/www
 RUN wget https://wordpress.org/latest.zip && \
     unzip latest.zip && \
@@ -127,46 +163,10 @@ CMD же запускает наш установленный php-fpm (вним�
     depends_on:
       - mariadb
     restart: unless-stopped
-    volumes:
-      - ./requirements/wordpress/conf/:/var/www/
     container_name: wordpress
 ```
 
-## Шаг 3. Конфигурация php-fpm
-
-А теперь мы создадим конфиг www.conf чтобы наш fastcgi слушал нас по порту 9000.
-
-``nano requirements/wordpress/conf/www.conf``
-
-По факту здесь всё просто, все параметры легко гуглятся:
-
-```
-[www]
-user = nobody
-group = nobody
-listen = 9000
-listen.owner = nobody
-listen.group = nobody
-pm = dynamic
-pm.max_children = 5
-pm.start_servers = 2
-pm.min_spare_servers = 1
-pm.max_spare_servers = 3
-```
-
-Далее добавим этото конфиг в папку нашего любимого демона php-fpm (как мы помним, демоны - это фоновые службы linxu).
-
-Для этого просто добавим контейнеру wordpress следующие разделы (wp-volume создадим на следующем шаге):
-
-```
-    volumes:
-          - wp-volume:/var/www/
-          - ./requirements/wordpress/conf:/etc/php8/php-fpm.d/
-```
-
-> Обратите внимание, что при иной версии php путь может отличаться. Можно просмотреть пути в уже поднятом контейнере.
-
-## Шаг 4. Создание разделов
+## Шаг 3. Создание разделов
 
 У nginx и wordpress должен быть общий раздел для обмена данными. Можно примонтировать туда и туда одну и ту же папку, но для удобства создадим раздел, указав путь к его папке:
 
@@ -228,7 +228,6 @@ services:
     restart: unless-stopped
     volumes:
       - wp-volume:/var/www/
-      - ./requirements/wordpress/conf:/etc/php8/php-fpm.d/
     container_name: wordpress
 
 volumes:
