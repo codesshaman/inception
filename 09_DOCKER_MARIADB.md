@@ -71,9 +71,9 @@ CMD ["/usr/bin/mysqld", "--skip-log-error"]
 
 ``CREATE USER 'wpuser'@'%' IDENTIFIED BY '123456';`` - создание пользователя
 
-``GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'%' IDENTIFIED BY '1234';`` - права на внешние хосты
+``GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'%' IDENTIFIED BY '123456';`` - права на внешние хосты
 
-``GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'localhost' IDENTIFIED BY '1234';`` - права на локальный хост
+``GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'localhost' IDENTIFIED BY '123456';`` - права на локальный хост
 
 ``FLUSH PRIVILEGES;`` - применение изменений
 
@@ -83,4 +83,14 @@ CMD ["/usr/bin/mysqld", "--skip-log-error"]
 
 ![настройка mariadb](media/docker_mariadb/step_5.png)
 
-Это значит, что наща база создана, и мы можем разворачивать на ней wordpress.
+Это значит, что наша база создана, и мы можем разворачивать на ней wordpress.
+
+
+
+USE mysql;
+FLUSH PRIVILEGES;
+ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
+CREATE DATABASE $WP_DATABASE_NAME CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE USER '$WP_DATABASE_USR'@'%' IDENTIFIED by '$WP_DATABASE_PWD';
+GRANT ALL PRIVILEGES ON $WP_DATABASE_NAME.* TO '$WP_DATABASE_USR'@'%';
+FLUSH PRIVILEGES;
