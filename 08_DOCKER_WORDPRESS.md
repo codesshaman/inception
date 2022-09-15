@@ -60,7 +60,7 @@ RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION}-xml \
     php${PHP_VERSION}-zip \
     wget \
-	  unzip
+    unzip
 ```
 
 Далее исправим нужный нам конфиг - конфиг www.conf, чтобы наш fastcgi слушал все соединения по порту 9000 (путь /etc/php8/php-fpm.d/ зависит от установленной версии php!):
@@ -115,7 +115,7 @@ RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION}-xml \
     php${PHP_VERSION}-zip \
     wget \
-	  unzip && \
+    unzip && \
     sed -i "s|listen = 127.0.0.1:9000|listen = 9000|g" \
       /etc/php8/php-fpm.d/www.conf && \
     sed -i "s|;listen.owner = nobody|listen.owner = nobody|g" \
@@ -146,12 +146,14 @@ CMD же запускает наш установленный php-fpm (вним�
     build:
       context: .
       dockerfile: requirements/wordpress/Dockerfile
-    depends_on:
-      - mariadb
+#    depends_on:
+#      - mariadb
     restart: unless-stopped
 ```
 
 Директива depends_on означает, что wordpress зависит от mariadb и не запустится, пока контейнер с базой данных не соберётся. Самым "шустрым" из наших контейнеров будет nginx - ввиду малого веса он соберётся и запустится первым. А вот база и CMS собираются примерно равное время, и чтобы не случилась, что wordpress начинает устанавливаться на ещё не развёрнутую базу потребуется указать эту зависимость.
+
+Но пока мы тестируем сам wordpress, mariadb ещё не развёрнута, потому оставим, но просто закомментируем эту зависимость.
 
 Далее укажем директорию, в которой развернётся наш wordpress, и имя контейнера:
 
@@ -160,8 +162,8 @@ CMD же запускает наш установленный php-fpm (вним�
     build:
       context: .
       dockerfile: requirements/wordpress/Dockerfile
-    depends_on:
-      - mariadb
+#    depends_on:
+#      - mariadb
     restart: unless-stopped
     container_name: wordpress
 ```
@@ -203,28 +205,12 @@ services:
       - wp-volume:/var/www/
     restart: unless-stopped
 
-  mariadb:
-    build:
-      context: .
-      dockerfile: requirements/mariadb/Dockerfile
-    container_name: mariadb
-    ports:
-      - "3306:3306"
-    volumes:
-      - "./requirements/mariadb/conf/:/mnt/"
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PWD:   ${MYSQL_ROOT_PASSWORD}
-      WP_DATABASE_NAME: wordpress
-      WP_DATABASE_USR:  ${MYSQL_USER}
-      WP_DATABASE_PWD:  ${MYSQL_PASSWORD}
-
   wordpress:
     build:
       context: .
       dockerfile: requirements/wordpress/Dockerfile
-    depends_on:
-      - mariadb
+#    depends_on:
+#      - mariadb
     restart: unless-stopped
     volumes:
       - wp-volume:/var/www/
@@ -329,9 +315,13 @@ zlib
 [Zend Modules]
 ```
 
-...и вуфля!
+...и вуаля! (как любят говорить наши французские друзья)
 
 ![настройка wordpress](media/work_wp.png)
+
+И вот, когда вы успешно запустили вордпресс, где-то в Париже возрадовался один разработичк...
+
+![настройка mariadb](media/docker_mariadb/step_6.jpeg)
 
 ## Шаг 6. Изменение Makefile
 
@@ -366,8 +356,4 @@ fclean:
 ```
 
 Перед сохранением в облако советую сделать make fclean.
-
-Теперь мы можем переходить в браузер macos настраивать готовый wordpress:
-
-``https://127.0.0.1/``
 
