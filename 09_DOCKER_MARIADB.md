@@ -57,20 +57,30 @@ CMD ["/usr/bin/mysqld", "--skip-log-error"]
 
 ## Шаг 2. Создание базы
 
-Напишем небольшой скрипт:
+Теперь создадим базу нашему wordpress-у. Для этого подключимся через терминал к нашей базе при помощи следующей команды:
 
-``nano requirements/mariadb/conf/db.sh``
+``docker exec -it --user root mariadb mysql -u root``
 
-Содержимое файла должно быть следующим:
+Таким образом мы оказываемся в графической оболочке mariadb:
 
-```
-rc-service mariadb start 2> /dev/null
-mysql -u mysql -e "CREATE DATABASE ${WP_DATABASE_NAME};"
-mysql -u mysql -e \
-"CREATE USER '${WP_DATABASE_USR}'@'%' IDENTIFIED BY '${WP_DATABASE_PWD}';
-GRANT ALL PRIVILEGES ON ${WP_DATABASE_NAME}.* TO '${WP_DATABASE_USR}'@'%' IDENTIFIED BY '${WP_DATABASE_PWD}';
-GRANT ALL PRIVILEGES ON ${WP_DATABASE_NAME}.* TO '${WP_DATABASE_USR}'@'localhost' IDENTIFIED BY '${WP_DATABASE_PWD}';
-ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PWD}';
-FLUSH PRIVILEGES;"
-```
+```MariaDB [(none)]>```
 
+Здесь мы последовательно одна за одной вводим следующие команды:
+
+``CREATE DATABASE wordpress;`` - создание базы
+
+``CREATE USER 'wpuser'@'%' IDENTIFIED BY '123456';`` - создание пользователя
+
+``GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'%' IDENTIFIED BY '1234';`` - права на внешние хосты
+
+``GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'localhost' IDENTIFIED BY '1234';`` - права на локальный хост
+
+``FLUSH PRIVILEGES;`` - применение изменений
+
+``SHOW DATABASES;`` - проверка изменений
+
+Вывод должен быть следующим:
+
+![настройка mariadb](media/docker_mariadb/step_5.png)
+
+Это значит, что наща база создана, и мы можем разворачивать на ней wordpress.
