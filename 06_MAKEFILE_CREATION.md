@@ -109,11 +109,15 @@ all:
 	@printf "Запуск конфигурации ${name}...\n"
 	@docker-compose -f ./docker-compose.yml up -d
 
+build:
+	@printf "Сборка конфигурации ${name}...\n"
+	@docker-compose -f ./docker-compose.yml up -d --build
+
 down:
 	@printf "Остановка конфигурации ${name}...\n"
 	@docker-compose -f ./docker-compose.yml down
 
-re:
+re:	down
 	@printf "Пересборка конфигурации ${name}...\n"
 	@docker-compose -f ./docker-compose.yml up -d --build
 
@@ -128,7 +132,7 @@ fclean:
 	@docker network prune --force
 	@docker volume prune --force
 
-.PHONY	: all down re clean fclean
+.PHONY	: all build down re clean fclean
 ```
 
 Ну и версия с англоязычными комментариями для ленивых (её можно копипастить в терминал):
@@ -139,11 +143,15 @@ all:
 	@printf "Launch configuration ${name}...\n"
 	@docker-compose -f ./docker-compose.yml up -d
 
+build:
+	@printf "Building configuration ${name}...\n"
+	@docker-compose -f ./docker-compose.yml up -d --build
+
 down:
 	@printf "Stopping configuration ${name}...\n"
 	@docker-compose -f ./docker-compose.yml down
 
-re:
+re:	down
 	@printf "Rebuild configuration ${name}...\n"
 	@docker-compose -f ./docker-compose.yml up -d --build
 
@@ -158,7 +166,7 @@ fclean:
 	@docker network prune --force
 	@docker volume prune --force
 
-.PHONY	: all down re clean fclean
+.PHONY	: all build down re clean fclean
 ```
 
 Да простят меня знатоки английского.
