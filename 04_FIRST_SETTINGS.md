@@ -101,9 +101,10 @@ touch project/srcs/.env
 echo "DOMAIN_NAME=<your_nickname>.42.fr" > project/srcs/.env
 echo "CERT_=./requirements/tools/<your_nickname>.42.fr.crt" >> project/srcs/.env
 echo "KEY_=./requirements/tools/<your_nickname>.42.fr.key" >> project/srcs/.env
-echo "MYSQL_ROOT_PASSWORD=123456" >> project/srcs/.env
-echo "MYSQL_DATABASE_USER=dbuser" >> project/srcs/.env
-echo "MYSQL_DATABASE_PWD=1234" >> project/srcs/.env
+echo "DB_NAME=wordpress" >> project/srcs/.env
+echo "DB_ROOT=rootpass" >> project/srcs/.env
+echo "DB_USER=wpuser" >> project/srcs/.env
+echo "DB_PASS=wppass" >> project/srcs/.env
 mkdir project/srcs/requirements/bonus
 mkdir project/srcs/requirements/mariadb
 mkdir project/srcs/requirements/mariadb/conf
