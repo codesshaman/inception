@@ -47,13 +47,11 @@
 
 В общем, всё "просто", без ста грамм не разберёшься. Начнём с создания контейнера.
 
-### Шаг 1.1. Базовый образ
-
 Сформируем базовый образ нашего контейнера. Чтобы не плодить лишних конфигов, поступим следующим образом:
 
-``cd ~/project/``
+``cd ~/project/srcs``
 
-``nano srcs/requirements/mariadb/Dockerfile``
+``nano requirements/mariadb/Dockerfile``
 
 Содержимое файла:
 
@@ -82,25 +80,17 @@ ENTRYPOINT  ["sh", "db.sh"]
 CMD ["/usr/bin/mysqld", "--skip-log-error"]
 ```
 
-Здесь мы устанавливаем без кеширования необходимые нам mariadb и mariadb-client. Далее мы в той же директиве RUN приводим в норму нашу рабочую конфигурацию. Делаем это одним RUN мы потому, что каждая директива RUN сздаёт новый слой в docker-образе, и лучше не плодить лишние RUN-ы без надобности. Команда tee отправляет результат вывода echo в файл, а команда sed заменяет строки в файлах по значению. Таким образом мы задаём минимально необходимый набор настроек без создания лишних конфигов внутри одного докер-файла.
+Здесь мы запускаем инструкцию RUN в которой устанавливаем без кеширования необходимые нам mariadb и mariadb-client. Далее мы в той же RUN приводим в норму нашу рабочую конфигурацию. Делаем это одним RUN мы потому, что каждая директива RUN сздаёт новый слой в docker-образе, и лучше не плодить лишние RUN-ы без надобности. Команда tee отправляет результат вывода echo в файл, а команда sed заменяет строки в файлах по значению. Таким образом мы задаём минимально необходимый набор настроек без создания лишних конфигов внутри одного докер-файла.
 
 Вторым слоем мы создаём базу данных из того, что мы установили и сконфигурировали на предыдущем слое. Указываем путь, где будет храниться база по дефолту. Затем открываем рабочий порт mariadb и переключаемся на пользователя mysql, созданного при установке БД.
 
 И наконец, уже под этим пользователем мы запускаем базу данных.
 
-### Шаг 1.2. Файл для sql-запросов
-
-Реляционные базы данных работают через синтаксис SQL-запросов. Естественно, нам потребуется отдельный файл, в который мы поместим наши запросы для создания БД. Создадим его в папке /tmp, добавив перед ``EXPOSE 3306`` команду:
-
-``RUN touch /tmp/create_db.sql``
-
-Итак, файл создан, теперь нам нужнен скрипт, который загрузит в него нужный нам sql-код и выполнит его.
-
 ## Шаг 2. Скрипт для создания БД
 
 Создадим в папке conf скрипт, создающий базу данных для wordpress:
 
-``nano srcs/requirements/mariadb/conf/create_db.sh``
+``nano requirements/mariadb/conf/create_db.sh``
 
 Запишем в него следующий код:
 
@@ -130,9 +120,9 @@ DROP DATABASE test;
 DELETE FROM mysql.db WHERE Db='test';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
 ALTER USER 'root'@'localhost' IDENTIFIED BY '';
-CREATE DATABASE wordpress CHARACTER SET utf8 COLLATE utf8_general_ci;
-CREATE USER 'wpuser'@'%' IDENTIFIED by 'wppass';
-GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'%';
+CREATE DATABASE ${DB_NAME} CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE USER '${DB_USER}'@'%' IDENTIFIED by '${DB_PASS}';
+GRANT ALL PRIVILEGES ON wordpress.* TO '${DB_USER}'@'%';
 FLUSH PRIVILEGES;
 EOF
         # run init.sql
@@ -149,9 +139,127 @@ fi
 
 ## Шаг 3. Выполняем скрипт
 
-Итак, скрипт создан, необходимо выполнить его в Dockerfile. Для этого модернизируем нашу команду перед EXPOSE (из шага 1.2):
+Итак, скрипт создан, необходимо выполнить его в Dockerfile. Для этого напишем команду:
 
 ```
 COPY requirements/mariadb/conf/create_db.sh .
-RUN chmod +x create_db.sh && ./create_db.sh 
+RUN sh create_db.sh && rm create_db.sh
+```
+
+Но чтобы скрипт сработал, мы должны переменные окружения для создания базы (через ARG).
+
+```
+ARG DB_NAME
+ARG DB_USER
+ARG DB_PASS
+```
+
+Со всем необходимым Dockerfile выглядит следующим образом:
+
+```
+FROM alpine:latest
+
+ARG DB_NAME
+ARG DB_USER
+ARG DB_PASS
+
+RUN apk update && apk add --no-cache mariadb mariadb-client
+
+RUN mkdir /var/run/mysqld; \
+    chmod 777 /var/run/mysqld; \
+    { echo '[mysqld]'; \
+      echo 'skip-host-cache'; \
+      echo 'skip-name-resolve'; \
+      echo 'bind-address=0.0.0.0'; \
+    } | tee  /etc/my.cnf.d/docker.cnf; \
+    sed -i "s|skip-networking|skip-networking=0|g" \
+      /etc/my.cnf.d/mariadb-server.cnf
+
+RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql
+
+EXPOSE 3306
+
+USER mysql
+COPY requirements/mariadb/conf/create_db.sh .
+RUN sh create_db.sh && rm create_db.sh
+CMD ["/usr/bin/mysqld", "--skip-log-error"]
+```
+
+## Шаг 4. Конфигурация docker-compose
+
+Секция mariadb выглядит примерно так же, как секция wordpress:
+
+```
+  mariadb:
+    build:
+      context: .
+      dockerfile: mariadb/Dockerfile
+      args:
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./mariadb/conf/:/mnt/"
+    restart: unless-stopped
+```
+
+Не забываем раскомментировать зависимость в секции wordpress-а. Весь docker-compose файл:
+
+```
+version: '3'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: requirements/nginx/Dockerfile
+    container_name: nginx
+    ports:
+      - "443:443"
+    volumes:
+      - ./requirements/nginx/conf/:/etc/nginx/conf.d/
+      - ./requirements/nginx/tools:/etc/nginx/ssl/
+      - wp-volume:/var/www/
+    restart: unless-stopped
+
+  wordpress:
+    build:
+      context: .
+      dockerfile: requirements/wordpress/Dockerfile
+      args:
+       DB_NAME: ${DB_NAME}
+       DB_USER: ${DB_USER}
+       DB_PASS: ${DB_PASS}
+    depends_on:
+      - mariadb
+    restart: unless-stopped
+    volumes:
+      - ./requirements/wordpress/conf:/mnt/
+      - wp-volume:/var/www/
+    container_name: wordpress
+
+  mariadb:
+    build:
+      context: .
+      dockerfile: requirements/mariadb/Dockerfile
+      args:
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./mariadb/conf/:/mnt/"
+    restart: unless-stopped
+
+volumes:
+  wp-volume:
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/${USER}/wordpress
 ```
