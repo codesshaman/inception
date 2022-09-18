@@ -40,7 +40,7 @@
 
 Добавим же нашего пользователя в группу командой 
 
-```usermod -aG docker <your_nickname>```
+```sudo usermod -aG docker <your_nickname>```
 
 И проверим, что добавление произошло:
 
