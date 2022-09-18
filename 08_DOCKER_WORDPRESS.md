@@ -26,13 +26,16 @@
 
 Но накатываем по-умному, указав актуальную на сегодня версию php. На момент создания гайда (2022) это php 8, если с 2022 года прошло много времени, нужно зайти на [официальный сайт php](https://www.php.net/ "официальный сайт php") и посмотреть, не вышла ли более новая версия.
 
-Поэтому версию PHP я укажу в переменной - аргументе командной строки. Задаёт переменную инструкция ARG.
+Поэтому версию PHP я укажу в переменной - аргументе командной строки. Задаёт переменную инструкция ARG. Так же при помощи этой инструкции я принимаю три аргумента из нашего .env-файла с секретами - имя базы, имя и пароь пользователя.
 
 Сначала перечислим базовые компоненты: это php, на котором и работает наш wordpress, php-fpm для взаимодействия с nginx и php-mysqli для взаимодействия с mariadb:
 
 ```
 FROM alpine:latest
 ARG PHP_VERSION=8
+ARG DB_NAME
+ARG DB_USER
+ARG DB_PASS
 RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
@@ -46,6 +49,9 @@ RUN apk update && apk upgrade && apk add --no-cache \
 ```
 FROM alpine:latest
 ARG PHP_VERSION=8
+ARG DB_NAME
+ARG DB_USER
+ARG DB_PASS
 RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
@@ -68,6 +74,9 @@ RUN apk update && apk upgrade && apk add --no-cache \
 ```
 FROM alpine:latest
 ARG PHP_VERSION=8
+ARG DB_NAME
+ARG DB_USER
+ARG DB_PASS
 RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
@@ -101,6 +110,9 @@ RUN apk update && apk upgrade && apk add --no-cache \
 ```
 FROM alpine:latest
 ARG PHP_VERSION=8
+ARG DB_NAME
+ARG DB_USER
+ARG DB_PASS
 RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
@@ -128,10 +140,13 @@ RUN wget https://wordpress.org/latest.zip && \
     unzip latest.zip && \
     cp -rf wordpress/* . && \
     rm -rf wordpress latest.zip
+COPY ./requirements/wordpress/conf/wp-config-create.sh .
+RUN sh wp-config-create.sh && rm wp-config-create.sh
 CMD ["/usr/sbin/php-fpm8", "-F"]
 ```
+После назначения рабочей директори мы загрузили wget-ом последнюю версию wordpress, разархивировали её и удалили все исходные файлы.
 
-В последней инструкции RUN мы загрузили wget-ом последнюю версию wordpress, разархивировали её и удалили все исходные файлы.
+После скачивания wordpress-а мы скопируем и выполним наш конфигурационный файл, который создадим на четвёртом шаге. После выполнения мы заставим его самовыпилиться при помощи rm.
 
 CMD же запускает наш установленный php-fpm (внимание: версия должна соответствовать установленной!)
 
@@ -155,6 +170,37 @@ CMD же запускает наш установленный php-fpm (вним�
 
 Но пока мы тестируем сам wordpress, mariadb ещё не развёрнута, потому оставим, но просто закомментируем эту зависимость.
 
+Далее мы передадим в контейнер те самые "секреты", хранимые в .env-файле. Это делается через директиву environment либо args. Я так и не смог передать окружение через environments, потому использовал args:
+
+```
+      args:
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+```
+
+Эти аргументы я помещаю в раздел build:
+
+```
+  wordpress:
+    build:
+      context: .
+      dockerfile: requirements/wordpress/Dockerfile
+      args:
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+#    depends_on:
+#      - mariadb
+    restart: unless-stopped
+    volumes:
+      - ./requirements/nginx/conf/:/etc/nginx/conf.d/
+      - wp-volume:/var/www/
+    container_name: wordpress
+```
+
+Примонтируем раздел с конфигом, который создадим на четвёртом шаге.
+
 Далее укажем директорию, в которой развернётся наш wordpress, и имя контейнера:
 
 ```
@@ -162,9 +208,16 @@ CMD же запускает наш установленный php-fpm (вним�
     build:
       context: .
       dockerfile: requirements/wordpress/Dockerfile
+      args:
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
 #    depends_on:
 #      - mariadb
     restart: unless-stopped
+    volumes:
+      - ./requirements/nginx/conf/:/etc/nginx/conf.d/
+      - wp-volume:/var/www/
     container_name: wordpress
 ```
 
@@ -209,10 +262,15 @@ services:
     build:
       context: .
       dockerfile: requirements/wordpress/Dockerfile
+      args:
+        DB_NAME=${DB_NAME}
+        DB_USER=${DB_USER}
+        DB_PASS=${DB_PASS}
 #    depends_on:
 #      - mariadb
     restart: unless-stopped
     volumes:
+      - ./requirements/wordpress/conf:/mnt/
       - wp-volume:/var/www/
     container_name: wordpress
 
@@ -241,9 +299,9 @@ if [ ! -f "/var/www/wp-config.php" ]; then
 
         cat << EOF > /var/www/wp-config.php
 <?php
-define( 'DB_NAME', 'wordpress' );
-define( 'DB_USER', 'wpuser' );
-define( 'DB_PASSWORD', 'wppass' );
+define( 'DB_NAME', '${DB_NAME}' );
+define( 'DB_USER', '${DB_USER}' );
+define( 'DB_PASSWORD', '${DB_PASS}' );
 define( 'DB_HOST', 'mariadb' );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
@@ -301,6 +359,16 @@ server {
 
 Вот теперь вроде бы всё, наша конфигурация готова к запуску.
 
+# Шаг 6. Проверка работы конфигурации
+
+А теперь внимание! Первый запуск и первоначальная сборка конфигурации должна производиться из каталога ``~/project/srcs``, иначе docker-compose не подхватит наши переменные окружения. Далее стартовать и тормозить контейнеры уже можно через Makefile, но сначала запускаем конфигурацию вручную!
+
+Итак, после того, как мы выполним ``docker-compose up -d --build`` в нашей директории ``~/project/srcs``, мы некоторое время будем наблюдать за сборкой конфигурации. И наконец, вконце мы обнаружим, что всё собралось и работает:
+
+![настройка wordpress](media/docker_wordpress/install_all.png)
+
+На всякий случай проверим работоспособность конфигурации. Выполним несколько команд. Сначала прослушаем сокет php:
+
 ``docker exec -it wordpress ps aux | grep 'php'``
 
 Вывод должен быть следующим:
@@ -311,6 +379,8 @@ server {
    10 nobody    0:00 {php-fpm8} php-fpm: pool www
 ```
 
+Затем посмотрим работу php, узнав версию:
+
 ``docker exec -it wordpress php -v``
 
 ```
@@ -318,6 +388,8 @@ PHP 8.0.22 (cli) (built: Aug  5 2022 23:54:32) ( NTS )
 Copyright (c) The PHP Group
 Zend Engine v4.0.22, Copyright (c) Zend Technologies
 ```
+
+И наконец, проверим, все ли модули установились:
 
 ``docker exec -it wordpress php -m``
 
@@ -351,7 +423,7 @@ zlib
 
 ...и вуаля! (как любят говорить наши французские друзья)
 
-![настройка wordpress](media/work_wp.png)
+![настройка wordpress](media/docker_wordpress/work_wp.png)
 
 И вот, когда вы успешно запустили вордпресс, где-то в Париже возрадовался один разработичк...
 
@@ -366,6 +438,10 @@ name = inception
 all:
 	@printf "Launch configuration ${name}...\n"
 	@docker-compose -f ./srcs/docker-compose.yml up -d
+
+build:
+	@printf "Building configuration ${name}...\n"
+	@docker-compose -f ./srcs/docker-compose.yml up -d --build
 
 down:
 	@printf "Stopping configuration ${name}...\n"
@@ -386,7 +462,7 @@ fclean:
 	@docker network prune --force
 	@docker volume prune --force
 
-.PHONY	: all down re clean fclean
+.PHONY	: all build down re clean fclean
 ```
 
 Перед сохранением в облако советую сделать make fclean.
