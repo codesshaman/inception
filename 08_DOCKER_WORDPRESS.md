@@ -224,6 +224,40 @@ volumes:
       device: /home/${USER}/wordpress
 ```
 
+## Шаг 4. Создание файла конфигурации worpdress
+
+Нам нужно будет скопировать в папку wordpress-а конфигурационный файл, который соединит нас с контейнером базы данных.
+
+Создадим этот файл в папке tools:
+
+``nano srcs/requirements/wordpress/conf/wp-config-create.sh``
+
+Вставим в него следующее содержимое:
+
+```
+#!bin/sh
+
+if [ ! -f "/var/www/wp-config.php" ]; then
+
+        cat << EOF > /var/www/wp-config.php
+<?php
+define( 'DB_NAME', 'wordpress' );
+define( 'DB_USER', 'wpuser' );
+define( 'DB_PASSWORD', 'wppass' );
+define( 'DB_HOST', 'mariadb' );
+define( 'DB_CHARSET', 'utf8' );
+define( 'DB_COLLATE', '' );
+$table_prefix = 'wp_';
+define( 'WP_DEBUG', false );
+if ( ! defined( 'ABSPATH' ) ) {
+	define( 'ABSPATH', __DIR__ . '/' );
+}
+require_once ABSPATH . 'wp-settings.php';
+EOF
+
+fi
+```
+
 ## Шаг 5. Изменение конфигурации nginx
 
 Нам необходимо изменить конфигурацию nginx-а чтобы тот обрабатывал только php-файлы. Для этого удалим из конфига все index.html.
