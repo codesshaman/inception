@@ -149,4 +149,9 @@ fi
 
 ## Шаг 3. Выполняем скрипт
 
-Итак, скрипт создан, необходимо выполнить его в Dockerfile. 
+Итак, скрипт создан, необходимо выполнить его в Dockerfile. Для этого модернизируем нашу команду перед EXPOSE (из шага 1.2):
+
+```
+COPY requirements/mariadb/conf/create_db.sh .
+RUN chmod +x create_db.sh && ./create_db.sh 
+```
