@@ -1,19 +1,23 @@
-name = simple_nginx_html
+name = inception
 all:
 	@printf "Запуск конфигурации ${name}...\n"
-	@docker-compose -f ./docker-compose.yml up -d
+	@docker-compose -f ./srcs/docker-compose.yml up -d
+
+build:
+	@printf "Сборка конфигурации ${name}...\n"
+	@docker-compose -f ./srcs/docker-compose.yml up -d --build
 
 down:
 	@printf "Остановка конфигурации ${name}...\n"
-	@docker-compose -f ./docker-compose.yml down
+	@docker-compose -f ./srcs/docker-compose.yml down
 
 re:
 	@printf "Пересборка конфигурации ${name}...\n"
-	@docker-compose -f ./docker-compose.yml up -d --build
+	@docker-compose -f ./srcs/docker-compose.yml up -d --build
 
 clean: down
 	@printf "Очистка конфигурации ${name}...\n"
-	@docker system prune --all
+	@docker system prune --a
 
 fclean:
 	@printf "Полная очистка всех конфигураций docker\n"
@@ -22,4 +26,4 @@ fclean:
 	@docker network prune --force
 	@docker volume prune --force
 
-.PHONY	: all down re clean fclean
+.PHONY	: all build down re clean fclean
