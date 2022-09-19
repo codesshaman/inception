@@ -454,23 +454,23 @@ zlib
 
 Перед нами откроется панель настроек:
 
-![настройка mariadb](media/docker_mariadb/welcome.jpeg)
+![настройка wordpress](media/docker_wordpress/welcome.jpeg)
 
 Вбиваем туда нужные нам логин, пароль, имя сайта (или сохраняем сгенерированный пароль в блокнотик), я записал следующее:
 
-![настройка mariadb](media/docker_mariadb/record.jpeg)
+![настройка wordpress](media/docker_wordpress/record.jpeg)
 
 После нажатия кнопки "Установить Wordpress" мы увидим окошко с сообщением об успешной установке и предложением залогиниться:
 
-![настройка mariadb](media/docker_mariadb/done.jpeg)
+![настройка wordpress](media/docker_wordpress/done.jpeg)
 
 Нажимаем кнопку логина, вводим свой логин и пароль:
 
-![настройка mariadb](media/docker_mariadb/login.jpeg)
+![настройка wordpress](media/docker_wordpress/login.jpeg)
 
 И попадаем на стартовую страницу нашего чистого wordpress-а!
 
-![настройка mariadb](media/docker_mariadb/startpage.jpeg)
+![настройка wordpress](media/docker_wordpress/startpage.jpeg)
 
 Поздравляю, мы завершили установку и настройку нашего wordpress. Теперь мы можем накатить на него тему, которая нам понравится, и получить прекрасный локальный сайт, который будет отображаться в браузере!
 
