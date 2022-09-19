@@ -17,7 +17,7 @@ re:
 
 clean: down
 	@printf "Очистка конфигурации ${name}...\n"
-	@docker system prune --a
+	@docker system prune -a
 
 fclean:
 	@printf "Полная очистка всех конфигураций docker\n"
