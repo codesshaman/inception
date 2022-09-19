@@ -91,7 +91,7 @@ re:
 ```
 clean: down
 	@printf "Очистка конфигурации ${name}...\n"
-	@docker system prune --a
+	@docker system prune -a
 ```
 
 ## Шаг 8. Глубокая очистка всех конфигураций
@@ -133,7 +133,7 @@ re:	down
 
 clean: down
 	@printf "Очистка конфигурации ${name}...\n"
-	@docker system prune --a
+	@docker system prune -a
 
 fclean:
 	@printf "Полная очистка всех конфигураций docker\n"
@@ -167,7 +167,7 @@ re:	down
 
 clean: down
 	@printf "Cleaning configuration ${name}...\n"
-	@docker system prune --a
+	@docker system prune -a
 
 fclean:
 	@printf "Total clean of all configurations docker\n"
