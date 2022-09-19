@@ -208,11 +208,15 @@ services:
       context: .
       dockerfile: requirements/nginx/Dockerfile
     container_name: nginx
+#    depends_on:
+#      - wordpress
     ports:
       - "443:443"
 ```
 
 Добавляем разделы, чтобы контейнер увидел наш конфиг и наши ключи, а так же обязательно монтируем наш /var/www - ту самую папку из старой конфигурации, которая понадобится нам для пробного запуска nginx. Позже мы удалим её и будем брать файлы из каталога wordpress-а.
+
+Так же пропишем зависимость, пока закомментировав её. Нам нужно, чтобы nginx стартовал после wordpress-а, подхватывая его сборку. Но nginx собирается быстрее, и  во избежании коллизий нам необходимо чтобы он подождал сборки контейнера с wordpress и запустился только после него. Пока для тестов закомментируем это.
 
 ```
 version: '3'
@@ -223,10 +227,12 @@ services:
       context: .
       dockerfile: requirements/nginx/Dockerfile
     container_name: nginx
+#    depends_on:
+#      - wordpress
     ports:
       - "443:443"
     volumes:
-      - ./requirements/nginx/conf/:/etc/nginx/conf.d/
+      - ./requirements/nginx/conf/:/etc/nginx/http.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
       - /home/${USER}/simple_docker_nginx_html/public/html:/var/www/
 ```
@@ -248,10 +254,12 @@ services:
       context: .
       dockerfile: requirements/nginx/Dockerfile
     container_name: nginx
+#    depends_on:
+#      - wordpress
     ports:
       - "443:443"
     volumes:
-      - ./requirements/nginx/conf/:/etc/nginx/conf.d/
+      - ./requirements/nginx/conf/:/etc/nginx/http.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
       - /home/${USER}/simple_docker_nginx_html/public/html:/var/www/
     restart: unless-stopped
