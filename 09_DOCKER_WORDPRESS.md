@@ -192,7 +192,6 @@ CMD же запускает наш установленный php-fpm (вним�
       - mariadb
     restart: unless-stopped
     volumes:
-      - ./requirements/nginx/conf/:/etc/nginx/conf.d/
       - wp-volume:/var/www/
     container_name: wordpress
 ```
@@ -214,7 +213,6 @@ CMD же запускает наш установленный php-fpm (вним�
       - mariadb
     restart: unless-stopped
     volumes:
-      - ./requirements/nginx/conf/:/etc/nginx/conf.d/
       - wp-volume:/var/www/
     container_name: wordpress
 ```
@@ -237,7 +235,7 @@ volumes:
 
 ``mkdir ~/wordpress``
 
-Теперь добавим этот раздел ко всем контейнерам, которые от него зависят. Таким образом вся наша конфигурация будет выглядеть так:
+Теперь добавим этот раздел ко всем контейнерам, которые от него зависят. И не забудем раскомментировать зависимости nginx-а. Таким образом вся наша конфигурация будет выглядеть так:
 
 ```
 version: '3'
@@ -248,10 +246,12 @@ services:
       context: .
       dockerfile: requirements/nginx/Dockerfile
     container_name: nginx
+    depends_on:
+      - wordpress
     ports:
       - "443:443"
     volumes:
-      - ./requirements/nginx/conf/:/etc/nginx/conf.d/
+      - ./requirements/nginx/conf/:/etc/nginx/http.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
       - wp-volume:/var/www/
     restart: unless-stopped
