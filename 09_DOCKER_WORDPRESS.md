@@ -454,23 +454,23 @@ zlib
 
 Перед нами откроется панель настроек:
 
-![настройка wordpress](media/docker_wordpress/welcome.jpeg)
+![настройка wordpress](media/docker_wordpress/welcome.png)
 
 Вбиваем туда нужные нам логин, пароль, имя сайта (или сохраняем сгенерированный пароль в блокнотик), я записал следующее:
 
-![настройка wordpress](media/docker_wordpress/record.jpeg)
+![настройка wordpress](media/docker_wordpress/record.png)
 
 После нажатия кнопки "Установить Wordpress" мы увидим окошко с сообщением об успешной установке и предложением залогиниться:
 
-![настройка wordpress](media/docker_wordpress/done.jpeg)
+![настройка wordpress](media/docker_wordpress/done.png)
 
 Нажимаем кнопку логина, вводим свой логин и пароль:
 
-![настройка wordpress](media/docker_wordpress/login.jpeg)
+![настройка wordpress](media/docker_wordpress/login.png)
 
 И попадаем на стартовую страницу нашего чистого wordpress-а!
 
-![настройка wordpress](media/docker_wordpress/startpage.jpeg)
+![настройка wordpress](media/docker_wordpress/startpage.png)
 
 Поздравляю, мы завершили установку и настройку нашего wordpress. Теперь мы можем накатить на него тему, которая нам понравится, и получить прекрасный локальный сайт, который будет отображаться в браузере!
 
