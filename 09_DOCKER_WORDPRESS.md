@@ -283,7 +283,6 @@ services:
       - mariadb
     restart: unless-stopped
     volumes:
-      - ./requirements/wordpress/conf:/mnt/
       - wp-volume:/var/www/
     container_name: wordpress
 
