@@ -134,7 +134,6 @@ server {
     # Указываем поддерживаемые протоколы tls:
     ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
     # Указываем опции кэширования и таймауты:
-    ssl_session_cache shared:SSL:10m;
     ssl_session_timeout 10m;
     keepalive_timeout 70;
     # Говорим серверу, файл с каким расширением
