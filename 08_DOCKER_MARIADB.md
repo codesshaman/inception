@@ -206,7 +206,7 @@ CMD ["/usr/bin/mysqld", "--skip-log-error"]
     restart: unless-stopped
 ```
 
-Не забываем раскомментировать зависимость в секции wordpress-а. Весь docker-compose файл:
+Весь docker-compose файл:
 
 ```
 version: '3'
@@ -225,22 +225,6 @@ services:
       - wp-volume:/var/www/
     restart: unless-stopped
 
-  wordpress:
-    build:
-      context: .
-      dockerfile: requirements/wordpress/Dockerfile
-      args:
-       DB_NAME: ${DB_NAME}
-       DB_USER: ${DB_USER}
-       DB_PASS: ${DB_PASS}
-    depends_on:
-      - mariadb
-    restart: unless-stopped
-    volumes:
-      - ./requirements/wordpress/conf:/mnt/
-      - wp-volume:/var/www/
-    container_name: wordpress
-
   mariadb:
     build:
       context: .
@@ -255,11 +239,4 @@ services:
     volumes:
       - "./mariadb/conf/:/mnt/"
     restart: unless-stopped
-
-volumes:
-  wp-volume:
-    driver_opts:
-      o: bind
-      type: none
-      device: /home/${USER}/wordpress
 ```
