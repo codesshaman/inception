@@ -1,26 +1,26 @@
 name = inception
 all:
-	@printf "Запуск конфигурации ${name}...\n"
+	@printf "Launch configuration ${name}...\n"
 	@docker-compose -f ./srcs/docker-compose.yml up -d
 
 build:
-	@printf "Сборка конфигурации ${name}...\n"
+	@printf "Building configuration ${name}...\n"
 	@docker-compose -f ./srcs/docker-compose.yml up -d --build
 
 down:
-	@printf "Остановка конфигурации ${name}...\n"
+	@printf "Stopping configuration ${name}...\n"
 	@docker-compose -f ./srcs/docker-compose.yml down
 
 re:
-	@printf "Пересборка конфигурации ${name}...\n"
+	@printf "Rebuild configuration ${name}...\n"
 	@docker-compose -f ./srcs/docker-compose.yml up -d --build
 
 clean: down
-	@printf "Очистка конфигурации ${name}...\n"
+	@printf "Cleaning configuration ${name}...\n"
 	@docker system prune -a
 
 fclean:
-	@printf "Полная очистка всех конфигураций docker\n"
+	@printf "Total clean of all configurations docker\n"
 	@docker stop $$(docker ps -qa)
 	@docker system prune --all --force --volumes
 	@docker network prune --force
