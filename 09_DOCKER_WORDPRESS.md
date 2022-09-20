@@ -364,9 +364,6 @@ server {
     server_name  <your_nickname>.42.fr www.<your_nickname>.42.fr;
     root    /var/www/;
     index index.php;
-#   if ($scheme = 'http') {
-#       return 301 https://<your_nickname>.42.fr$request_uri;
-#   }
     ssl_certificate     /etc/nginx/ssl/<your_nickname>.42.fr.crt;
     ssl_certificate_key /etc/nginx/ssl/<your_nickname>.42.fr.key;
     ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
