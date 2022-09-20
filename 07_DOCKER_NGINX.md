@@ -117,8 +117,6 @@ EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]
 ```
 
-![настройка nginx](media/nginx_deploy/step_6.png)
-
 Сохраняем, закрываем.
 
 ## Шаг 3. Создание файла конфигурации
