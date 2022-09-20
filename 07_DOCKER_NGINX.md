@@ -129,17 +129,13 @@ CMD ["nginx", "-g", "daemon off;"]
 
 ```nano conf/nginx.conf```
 
-Так как мы уже тренировались с тестовым контейнером, возьмём похожую конфигурацию, изменив её под php, чтобы она позволяла читать не html, а php файлы wordpress-а. Но на первом этапе мы закомментируем секции, отвечающие за php, и пропишем на время поддержку html (для проверки):
+Так как мы уже тренировались с тестовым контейнером, возьмём похожую конфигурацию, изменив её под php, чтобы она позволяла читать не html, а php файлы wordpress-а. Порт 80 нам больше не понадобится, так как по гайду мы можем использовать только порт 443. Но на первом этапе мы закомментируем секции, отвечающие за php, и пропишем на время поддержку html (для проверки):
 ```
 server {
-    listen      80;
     listen      443 ssl;
     server_name  <your_nickname>.42.fr www.<your_nickname>.42.fr;
     root    /var/www/;
     index index.php index.html;
-#   if ($scheme = 'http') {
-#       return 301 https://<your_nickname>.42.fr$request_uri;
-#   }
     ssl_certificate     /etc/nginx/ssl/<your_nickname>.42.fr.crt;
     ssl_certificate_key /etc/nginx/ssl/<your_nickname>.42.fr.key;
     ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
