@@ -366,7 +366,7 @@ server {
     index index.php;
     ssl_certificate     /etc/nginx/ssl/<your_nickname>.42.fr.crt;
     ssl_certificate_key /etc/nginx/ssl/<your_nickname>.42.fr.key;
-    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+    ssl_protocols       TLSv1.2 TLSv1.3;
     ssl_session_timeout 10m;
     keepalive_timeout 70;
     location / {
