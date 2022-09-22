@@ -33,7 +33,7 @@
 Сначала перечислим базовые компоненты: это php, на котором и работает наш wordpress, php-fpm для взаимодействия с nginx и php-mysqli для взаимодействия с mariadb:
 
 ```
-FROM alpine:latest
+FROM alpine:3.16
 ARG PHP_VERSION=8
 ARG DB_NAME
 ARG DB_USER
@@ -49,7 +49,7 @@ RUN apk update && apk upgrade && apk add --no-cache \
 Для полноценной работы нашего wordpress-а не поскупимся и загрузим все обязательные модули, опустив модули кэширования и дополнительные. Так же загрузим пакет wget, нужный для скачивания самого wordpress, и пакет unzip для разархивирования архива со скачанным wordpress:
 
 ```
-FROM alpine:latest
+FROM alpine:3.16
 ARG PHP_VERSION=8
 ARG DB_NAME
 ARG DB_USER
@@ -74,7 +74,7 @@ RUN apk update && apk upgrade && apk add --no-cache \
 Далее исправим нужный нам конфиг - конфиг www.conf, чтобы наш fastcgi слушал все соединения по порту 9000 (путь /etc/php8/php-fpm.d/ зависит от установленной версии php!):
 
 ```
-FROM alpine:latest
+FROM alpine:3.16
 ARG PHP_VERSION=8
 ARG DB_NAME
 ARG DB_USER
@@ -110,7 +110,7 @@ RUN apk update && apk upgrade && apk add --no-cache \
 Далее нам надо скачать wordpress и разархивировать его по пути /var/www. Для удобства сделаем этот путь рабочим командой WORKDIR:
 
 ```
-FROM alpine:latest
+FROM alpine:3.16
 ARG PHP_VERSION=8
 ARG DB_NAME
 ARG DB_USER
