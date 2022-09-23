@@ -136,7 +136,11 @@ fi
 
 ## Шаг 3. Выполняем скрипт
 
-Итак, скрипт создан, необходимо выполнить его в Dockerfile. Для этого напишем команду:
+Итак, скрипт создан, необходимо выполнить его в Dockerfile:
+
+``nano requirements/mariadb/Dockerfile``
+
+Для этого напишем команду:
 
 ```
 COPY requirements/mariadb/conf/create_db.sh .
@@ -190,6 +194,8 @@ CMD ["/usr/bin/mysqld", "--skip-log-error"]
 
 ## Шаг 4. Конфигурация docker-compose
 
+Продолжаем редактировать наш docker-compose.yml
+
 Секция mariadb выглядит примерно так же, как секция wordpress:
 
 ```
@@ -228,7 +234,7 @@ services:
     volumes:
       - ./requirements/nginx/conf/:/etc/nginx/http.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
-      - wp-volume:/var/www/
+      - /home/${USER}/simple_docker_nginx_html/public/html:/var/www/
     restart:  on-failure
 
   mariadb:
