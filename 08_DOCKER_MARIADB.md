@@ -206,7 +206,7 @@ CMD ["/usr/bin/mysqld", "--skip-log-error"]
       - "3306:3306"
     volumes:
       - "./mariadb/conf/:/mnt/"
-    restart: unless-stopped
+    restart:  on-failure
 ```
 Как мы можем видеть, наши перменные передаются в ARG через секцию args в секции build. Их можно передать только здесь, потому как они запускаются только при билде и не присутствуют в образе, в отличие от ENV, которые передаются через environment-секцию уже внутри сервиса.
 
@@ -229,7 +229,7 @@ services:
       - ./requirements/nginx/conf/:/etc/nginx/http.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
       - wp-volume:/var/www/
-    restart: unless-stopped
+    restart:  on-failure
 
   mariadb:
     build:
@@ -244,7 +244,7 @@ services:
       - "3306:3306"
     volumes:
       - "./mariadb/conf/:/mnt/"
-    restart: unless-stopped
+    restart:  on-failure
 ```
 ## Шаг 5. Проверка работы базы
 
