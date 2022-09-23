@@ -239,11 +239,13 @@ services:
       - /home/${USER}/simple_docker_nginx_html/public/html:/var/www/
 ```
 
-Дальше мы прописываем тип перезапуска (всегда, за исключением команды остановки):
+Дальше мы прописываем тип перезапуска. В боевых проектах лично я использую тип restart: unless-stopped (перезапускать всегда, за исключением команды остановки), но сабжем он запрещён, потому выставляем разрешённый:
 
 ```
-    restart: unless-stopped
+    restart:  on-failure
 ```
+
+...что значит перезапускать только в случае краша.
 
 И таким образом мы имеем следующую конфигурацию:
 
@@ -264,7 +266,7 @@ services:
       - ./requirements/nginx/conf/:/etc/nginx/http.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
       - /home/${USER}/simple_docker_nginx_html/public/html:/var/www/
-    restart: unless-stopped
+    restart:  on-failure
 ```
 
 Не забываем выключить тестовую конфигурацию:
