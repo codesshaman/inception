@@ -165,7 +165,7 @@ CMD же запускает наш установленный php-fpm (вним�
       dockerfile: requirements/wordpress/Dockerfile
     depends_on:
       - mariadb
-    restart: unless-stopped
+    restart:  on-failure
 ```
 
 Директива depends_on означает, что wordpress зависит от mariadb и не запустится, пока контейнер с базой данных не соберётся. Самым "шустрым" из наших контейнеров будет nginx - ввиду малого веса он соберётся и запустится первым. А вот база и CMS собираются примерно равное время, и чтобы не случилась, что wordpress начинает устанавливаться на ещё не развёрнутую базу потребуется указать эту зависимость.
@@ -192,7 +192,7 @@ CMD же запускает наш установленный php-fpm (вним�
         DB_PASS: ${DB_PASS}
     depends_on:
       - mariadb
-    restart: unless-stopped
+    restart:  on-failure
     volumes:
       - wp-volume:/var/www/
     container_name: wordpress
@@ -213,7 +213,7 @@ CMD же запускает наш установленный php-fpm (вним�
         DB_PASS: ${DB_PASS}
     depends_on:
       - mariadb
-    restart: unless-stopped
+    restart:  on-failure
     volumes:
       - wp-volume:/var/www/
     container_name: wordpress
@@ -268,7 +268,7 @@ services:
       - ./requirements/nginx/conf/:/etc/nginx/http.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
       - wp-volume:/var/www/
-    restart: unless-stopped
+    restart:  on-failure
 
   mariadb:
     build:
@@ -285,7 +285,7 @@ services:
       - inception
     volumes:
       - "./mariadb/conf/:/mnt/"
-    restart: unless-stopped
+    restart:  on-failure
 
   wordpress:
     build:
@@ -297,7 +297,7 @@ services:
         DB_PASS: ${DB_PASS}
     depends_on:
       - mariadb
-    restart: unless-stopped
+    restart:  on-failure
     networks:
       - inception
     volumes:
