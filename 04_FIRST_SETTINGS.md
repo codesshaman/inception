@@ -110,26 +110,33 @@ mkdir project/srcs/requirements/mariadb
 mkdir project/srcs/requirements/mariadb/conf
 touch project/srcs/requirements/mariadb/conf/create_db.sh
 mkdir project/srcs/requirements/mariadb/tools
+echo "/n" > project/srcs/requirements/mariadb/tools/.gitikeep
 touch project/srcs/requirements/mariadb/Dockerfile
 touch project/srcs/requirements/mariadb/.dockerignore
 echo ".git" > project/srcs/requirements/mariadb/.dockerignore
+echo ".env" >> project/srcs/requirements/mariadb/.dockerignore
 mkdir project/srcs/requirements/nginx
 mkdir project/srcs/requirements/nginx/conf
 touch project/srcs/requirements/nginx/conf/nginx.conf
 mkdir project/srcs/requirements/nginx/tools
 touch project/srcs/requirements/nginx/Dockerfile
 echo ".git" > project/srcs/requirements/mariadb/.dockerignore
+echo ".env" >> project/srcs/requirements/mariadb/.dockerignore
 mkdir project/srcs/requirements/tools
 mkdir project/srcs/requirements/wordpress
 mkdir project/srcs/requirements/wordpress/conf
 touch project/srcs/requirements/wordpress/conf/wp-config-create.sh
 mkdir project/srcs/requirements/wordpress/tools
+echo "/n" > project/srcs/requirements/wordpress/tools/.gitikeep
 touch project/srcs/requirements/wordpress/Dockerfile
 touch project/srcs/requirements/wordpress/.dockerignore
 echo ".git" > project/srcs/requirements/wordpress/.dockerignore
+echo ".env" >> project/srcs/requirements/wordpress/.dockerignore
 ```
 
 > Не забываем менять <your_nickname> на свой ник!
+
+В директориях tools у wordpress и mariadb мы создаём пустой файл .gitkeep, служащий лишь для того, чтобы эти пустые папки попали в индексацию git. Без него они не выгрузятся в репозиторий. А папки эти мы не будем использовать, так как у mariadb и wp будет всего по одному конфигу. Большинство простых операций мы выполним непосредственно в dockerfile, отбросив необходимость в лишних файлах извне.
 
 Создадим файл с расширением .sh, закинув туда данный код:
 
