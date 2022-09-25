@@ -262,8 +262,6 @@ services:
       - "3306:3306"
     networks:
       - inception
-    volumes:
-      - "./mariadb/conf/:/mnt/"
     restart:  on-failure
 
   wordpress:
