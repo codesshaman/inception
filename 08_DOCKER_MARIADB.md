@@ -196,7 +196,7 @@ CMD ["/usr/bin/mysqld", "--skip-log-error"]
 
 Продолжаем редактировать наш docker-compose.yml
 
-Секция mariadb выглядит примерно так же, как секция wordpress:
+Секция mariadb выглядит следующим образом:
 
 ```
   mariadb:
@@ -210,11 +210,11 @@ CMD ["/usr/bin/mysqld", "--skip-log-error"]
     container_name: mariadb
     ports:
       - "3306:3306"
-    volumes:
-      - "./mariadb/conf/:/mnt/"
     restart:  on-failure
 ```
 Как мы можем видеть, наши перменные передаются в ARG через секцию args в секции build. Их можно передать только здесь, потому как они запускаются только при билде и не присутствуют в образе, в отличие от ENV, которые передаются через environment-секцию уже внутри сервиса.
+
+Mariadb работает на порту 3306, потому этот порт должен быть открыт.
 
 Весь docker-compose файл:
 
@@ -248,8 +248,6 @@ services:
     container_name: mariadb
     ports:
       - "3306:3306"
-    volumes:
-      - "./mariadb/conf/:/mnt/"
     restart:  on-failure
 ```
 ## Шаг 5. Проверка работы базы
