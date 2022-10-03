@@ -168,6 +168,8 @@ server {
 
 ```cp ~/project/srcs/requirements/tools/* ~/project/srcs/requirements/nginx/tools/```
 
+![установка nginx](media/stickers/understand.png)
+
 ## Шаг 4. Создание конфигурации docker-compose
 
 Docker-compose - это система запуска контейнеров docker, можно сказать, это некая надстройка над docker. Если в docker-файлах мы прописывали, какой софт установить внутри одного контейнерного окружения, то с docker-compose мы можем управлять запуском сразу множества подобных контейнеров, запуская их одной командой.
