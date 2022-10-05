@@ -214,7 +214,7 @@ CMD ["/usr/bin/mysqld", "--skip-log-error"]
     container_name: mariadb
     ports:
       - "3306:3306"
-    restart:  on-failure
+    restart: always
 ```
 Как мы можем видеть, наши перменные передаются в ARG через секцию args в секции build. Их можно передать только здесь, потому как они запускаются только при билде и не присутствуют в образе, в отличие от ENV, которые передаются через environment-секцию уже внутри сервиса.
 
@@ -239,7 +239,7 @@ services:
       - ./requirements/nginx/conf/:/etc/nginx/http.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
       - /home/${USER}/simple_docker_nginx_html/public/html:/var/www/
-    restart:  on-failure
+    restart: always
 
   mariadb:
     build:
@@ -252,7 +252,7 @@ services:
     container_name: mariadb
     ports:
       - "3306:3306"
-    restart:  on-failure
+    restart: always
 ```
 ## Шаг 5. Проверка работы базы
 
