@@ -51,10 +51,11 @@ FROM alpine:3.16
 
 RUN apk update && apk upgrade && \
     apk add --no-cache redis && \
-    sed -i "s|bind 127.0.0.1|#bind 127.0.0.1|g" /etc/redis.conf && \
-    sed -i "s|# maxmemory 10mb|maxmemory 2mb|g" /etc/redis.conf && \
-    sed -i "s|# maxmemory-policy noevicrion|maxmemory-policy allkeys-lru|g" \
-    /etc/redis.conf
+    mkdir /data && \
+    chown -R redis:redis /data && \
+    sed -i "s|bind 127.0.0.1|#bind 127.0.0.1|g"  /etc/redis.conf && \
+    sed -i "s|# maxmemory <bytes>|maxmemory 20mb|g"  /etc/redis.conf && \
+    echo "maxmemory-policy allkeys-lru" >> /etc/redis.conf
 
 EXPOSE 6379
 
@@ -201,11 +202,14 @@ fi
 
 ![бонусы wordpress](media/bonus_part/step_7.png)
 
-Вводим в поиск "Redis Object Cache" и устанавливаем найденный плагин:
+Вводим в поиск "Redis" и устанавливаем найденный плагин:
 
 ![бонусы wordpress](media/bonus_part/step_8.png)
 
-Переходим во вкладку установленных плагинов и активируем его, нажимая большую синюю кнопку "Enable Object Cache":
+После установки нам нужно нажать "Активировать", и наш плагин заработет.
 
-![бонусы wordpress](media/bonus_part/step_9.png)
+Чтобы проверить работу кэша выполняем следующую команду:
 
+``docker exec -it redis redis-cli monitor``
+
+Если вывод OK - значит у нас всё работает, можем выходить из монитора по Ctrl+C.
