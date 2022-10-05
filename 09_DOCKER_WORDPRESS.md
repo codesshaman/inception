@@ -38,10 +38,10 @@
 
 ```
 FROM alpine:3.16
-ARG PHP_VERSION=8
-ARG DB_NAME
-ARG DB_USER
-ARG DB_PASS
+ARG PHP_VERSION=8 \
+    DB_NAME \
+    DB_USER \
+    DB_PASS
 RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
@@ -54,10 +54,10 @@ RUN apk update && apk upgrade && apk add --no-cache \
 
 ```
 FROM alpine:3.16
-ARG PHP_VERSION=8
-ARG DB_NAME
-ARG DB_USER
-ARG DB_PASS
+ARG PHP_VERSION=8 \
+    DB_NAME \
+    DB_USER \
+    DB_PASS
 RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
@@ -79,10 +79,10 @@ RUN apk update && apk upgrade && apk add --no-cache \
 
 ```
 FROM alpine:3.16
-ARG PHP_VERSION=8
-ARG DB_NAME
-ARG DB_USER
-ARG DB_PASS
+ARG PHP_VERSION=8 \
+    DB_NAME \
+    DB_USER \
+    DB_PASS
 RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
@@ -115,10 +115,10 @@ RUN apk update && apk upgrade && apk add --no-cache \
 
 ```
 FROM alpine:3.16
-ARG PHP_VERSION=8
-ARG DB_NAME
-ARG DB_USER
-ARG DB_PASS
+ARG PHP_VERSION=8 \
+    DB_NAME \
+    DB_USER \
+    DB_PASS
 RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION} \
     php${PHP_VERSION}-fpm \
