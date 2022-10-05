@@ -268,7 +268,7 @@ services:
       - ./requirements/nginx/conf/:/etc/nginx/http.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
       - /home/${USER}/simple_docker_nginx_html/public/html:/var/www/
-    restart:  on-failure
+    restart: always
 ```
 
 Не забываем выключить тестовую конфигурацию:
