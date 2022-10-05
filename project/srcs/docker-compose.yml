@@ -61,6 +61,23 @@ services:
       - inception
     restart: always
 
+  vsftpd:
+    build: 
+      context: .
+      dockerfile: bonus/vsftpd/Dockerfile
+    container_name: vsftpd
+    ports:
+      - "21:21"
+      - "21100-21110:21100-21110"
+    volumes:
+      - wp-volume:/var/www/
+    networks:
+     - inception
+    restart: always
+    # environment:
+    #   FTP_USR: ${FTP_USR}
+    #   FTP_PWD: ${FTP_PWD}
+
 volumes:
   wp-volume:
     driver_opts:
