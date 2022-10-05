@@ -160,9 +160,9 @@ RUN sh create_db.sh && rm create_db.sh
 Пропишем наши переменные окружения в контейнере:
 
 ```
-ARG DB_NAME
-ARG DB_USER
-ARG DB_PASS
+ARG DB_NAME \
+    DB_USER \
+    DB_PASS
 ```
 
 Со всем необходимым Dockerfile выглядит следующим образом:
@@ -170,9 +170,9 @@ ARG DB_PASS
 ```
 FROM alpine:3.16
 
-ARG DB_NAME
-ARG DB_USER
-ARG DB_PASS
+ARG DB_NAME \
+    DB_USER \
+    DB_PASS
 
 RUN apk update && apk add --no-cache mariadb mariadb-client
 
