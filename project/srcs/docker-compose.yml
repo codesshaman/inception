@@ -77,6 +77,17 @@ services:
      - inception
     restart: always
 
+  adminer:
+    build:
+      context: .
+      dockerfile: bonus/adminer/Dockerfile
+    container_name: adminer
+    ports:
+      - "8080:8080"
+    networks:
+     - inception
+    restart: always
+
 volumes:
   wp-volume:
     driver_opts:
