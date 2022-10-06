@@ -4,7 +4,7 @@ ARG FTP_USR \
     FTP_PWD
 
 RUN apk update && apk upgrade && \
-    apk add --no-cache vsftpd nano
+    apk add --no-cache vsftpd
 
 RUN adduser -h /var/www -s /bin/false -D ${FTP_USR} && \
     echo "${FTP_USR}:${FTP_PWD}" | /usr/sbin/chpasswd && \

@@ -1,8 +1,6 @@
 #!bin/sh
-
 if [ ! -f "/var/www/wp-config.php" ]; then
-
-        cat << EOF > /var/www/wp-config.php
+cat << EOF > /var/www/wp-config.php
 <?php
 define( 'DB_NAME', '${DB_NAME}' );
 define( 'DB_USER', '${DB_USER}' );
@@ -22,5 +20,4 @@ define( 'WP_REDIS_READ_TIMEOUT', 1 );
 define( 'WP_REDIS_DATABASE', 0 );
 require_once ABSPATH . 'wp-settings.php';
 EOF
-
 fi
