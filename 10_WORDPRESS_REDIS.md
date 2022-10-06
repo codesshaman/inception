@@ -121,96 +121,7 @@ CMD [ "redis-server" , "/etc/redis.conf" ]
 
 Если мы получили этот ответ, значит наш сервер работает и прекрасно пингуется. Поздравляю вас с этим замечательным событием!
 
-## Шаг 4. Пересборка контейнера wordpress
-
-Теперь перед нами встаёт задача подружить наш контейнер редиса и контейнер wordpress-а.
-
-В первую же инструкцию RUN, в раздел установки пакетов, добавляем ещё одну строку. Установим пакет php-redis:
-
-``php${PHP_VERSION}-redis \``
-
-Так же я создал отдельный скрипт для создания wp-config, а потому wp-config-create.sh заменяю на wp-config-create_bonus.sh.
-
-Таким образом наш Dockerfile будет содержать следующий код:
-
-```
-FROM alpine:3.16
-ARG PHP_VERSION=8 \
-    DB_NAME \
-    DB_USER \
-    DB_PASS
-RUN apk update && apk upgrade && apk add --no-cache \
-    php${PHP_VERSION} \
-    php${PHP_VERSION}-fpm \
-    php${PHP_VERSION}-mysqli \
-    php${PHP_VERSION}-json \
-    php${PHP_VERSION}-curl \
-    php${PHP_VERSION}-dom \
-    php${PHP_VERSION}-exif \
-    php${PHP_VERSION}-fileinfo \
-    php${PHP_VERSION}-mbstring \
-    php${PHP_VERSION}-openssl \
-    php${PHP_VERSION}-xml \
-    php${PHP_VERSION}-zip \
-    php${PHP_VERSION}-redis \
-    wget \
-    unzip && \
-    sed -i "s|listen = 127.0.0.1:9000|listen = 9000|g" \
-      /etc/php8/php-fpm.d/www.conf && \
-    sed -i "s|;listen.owner = nobody|listen.owner = nobody|g" \
-      /etc/php8/php-fpm.d/www.conf && \
-    sed -i "s|;listen.group = nobody|listen.group = nobody|g" \
-      /etc/php8/php-fpm.d/www.conf && \
-    rm -f /var/cache/apk/*
-WORKDIR /var/www
-RUN wget https://wordpress.org/latest.zip && \
-    unzip latest.zip && \
-    cp -rf wordpress/* . && \
-    rm -rf wordpress latest.zip
-COPY ./requirements/wordpress/conf/wp-config-create_bonus.sh .
-RUN sh wp-config-create_bonus.sh && rm wp-config-create_bonus.sh && \
-    chmod -R 0777 wp-content/
-CMD ["/usr/sbin/php-fpm8", "-F"]
-```
-И это всё, что нам нужно добавить в этот конфиг.
-
-## Шаг 5. Изменение конфига wp
-
-Далее мы должны изменить конфигурацию wp-config - файла. Для бонусной части я просто создал новый конфиг с именем ``wp-config-create_bonus.sh``. В него я добавил строки, отвечающие за хранение кеша в redis и теперь этот файл выглядит так:
-
-```
-#!bin/sh
-
-if [ ! -f "/var/www/wp-config.php" ]; then
-
-        cat << EOF > /var/www/wp-config.php
-<?php
-define( 'DB_NAME', '${DB_NAME}' );
-define( 'DB_USER', '${DB_USER}' );
-define( 'DB_PASSWORD', '${DB_PASS}' );
-define( 'DB_HOST', 'mariadb' );
-define( 'DB_CHARSET', 'utf8' );
-define( 'DB_COLLATE', '' );
-define('FS_METHOD','direct');
-\$table_prefix = 'wp_';
-define( 'WP_DEBUG', false );
-if ( ! defined( 'ABSPATH' ) ) {
-	define( 'ABSPATH', __DIR__ . '/' );
-}
-define( 'WP_REDIS_HOST', 'redis' );
-define( 'WP_REDIS_PORT', 6379 );
-define( 'WP_REDIS_TIMEOUT', 1 );
-define( 'WP_REDIS_READ_TIMEOUT', 1 );
-define( 'WP_REDIS_DATABASE', 0 );
-require_once ABSPATH . 'wp-settings.php';
-EOF
-
-fi
-```
-
-Здесь мы используем имя хоста (redis), которое должно соответствовать имени контейнера с базой redis, порт по умолчанию (6379), который должен быть открыт в контейнере redis и прописан в docker-compose, для подключения к этой базе.
-
-## Шаг 6. Установка плагина WP Redis
+## Шаг 4. Установка плагина WP Redis
 
 Заходим в wordpress на страницу поиска плагинов:
 
@@ -221,6 +132,8 @@ fi
 ![бонусы wordpress](media/bonus_part/step_8.png)
 
 После установки нам нужно нажать "Активировать", и наш плагин заработет.
+
+## Шаг 4. Проверка работы Redis
 
 Чтобы проверить работу кэша выполняем следующую команду:
 
