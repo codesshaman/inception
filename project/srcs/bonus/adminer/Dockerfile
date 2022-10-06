@@ -15,13 +15,16 @@ RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION}-openssl \
     php${PHP_VERSION}-xml \
     php${PHP_VERSION}-zip \
+    php${PHP_VERSION}-dev \
     php${PHP_VERSION}-gettext \
     wget nano
 
 WORKDIR /var/www
 
-RUN wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php && \
-    mv adminer-4.8.1.php index.php 
+#RUN wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php && \
+RUN wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1-en.php $$ \
+    mv adminer-4.8.1-en.php index.php && \
+    sed -i "s|;max_input_vars = 1000|max_input_vars = 10000|g"  /etc/php${PHP_VERSION}/php.ini
 # && chown -R root:root /var/www/
 
 EXPOSE 8080
