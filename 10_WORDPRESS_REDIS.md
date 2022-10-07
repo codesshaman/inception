@@ -58,6 +58,12 @@
 
 ``mkdir bonus/vsftpd``
 
+``mkdir bonus/adminer``
+
+``mkdir bonus/website``
+
+``mkdir bonus/website/conf``
+
 В директории redis мы создадим Dockerfile:
 
 ``nano bonus/redis/Dockerfile``
