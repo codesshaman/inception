@@ -139,4 +139,6 @@ CMD [ "redis-server" , "/etc/redis.conf" ]
 
 ``docker exec -it redis redis-cli monitor``
 
-Если вывод OK - значит у нас всё работает, можем выходить из монитора по Ctrl+C.
+Если вывод OK - значит у нас всё работает, можем выходить из монитора по Ctrl+C. Редис запущен, расходимся!
+
+![настройка vsftpd](media/stickers/walk.png)
