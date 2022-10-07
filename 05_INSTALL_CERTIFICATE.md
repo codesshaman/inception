@@ -221,4 +221,6 @@ services:
 
 ```docker-compose down```
 
+![настройка vsftpd](media/stickers/gone.png)
+
 и переходить к созданию Makefile!
