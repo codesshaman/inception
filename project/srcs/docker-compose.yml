@@ -16,7 +16,7 @@ services:
       - ./requirements/nginx/conf/:/etc/nginx/http.d/
       - ./requirements/nginx/tools:/etc/nginx/ssl/
       - wp-volume:/var/www/
-    restart:  on-failure
+    restart: always
 
   mariadb:
     build:
@@ -32,7 +32,7 @@ services:
       - "3306:3306"
     networks:
       - inception
-    restart:  on-failure
+    restart: always
 
   wordpress:
     build:
@@ -45,11 +45,11 @@ services:
     container_name: wordpress
     depends_on:
       - mariadb
-    restart:  on-failure
     networks:
       - inception
     volumes:
       - wp-volume:/var/www/
+    restart: always
 
   redis:
     build:
