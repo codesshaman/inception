@@ -17,7 +17,12 @@ RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION}-zip \
     php${PHP_VERSION}-dev \
     php${PHP_VERSION}-gettext \
-    wget nano
+    wget nano && \
+    sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 200M|g"  /etc/php8/php.ini && \
+    sed -i "s|post_max_size = 8M|post_max_size = 200M|g"  /etc/php8/php.ini && \
+    sed -i "s|memory_limit = 128M|memory_limit = 800M|g"  /etc/php8/php.ini && \
+    sed -i "s|max_execution_time = 30|max_execution_time = 600|g"  /etc/php8/php.ini && \
+    sed -i "s|;max_input_vars = 1000|max_input_vars = 5000|g"  /etc/php8/php.ini
 
 WORKDIR /var/www
 
