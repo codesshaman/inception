@@ -173,6 +173,7 @@ CMD же запускает наш установленный php-fpm (вним�
     build:
       context: .
       dockerfile: requirements/wordpress/Dockerfile
+    container_name: wordpress
     depends_on:
       - mariadb
     restart: always
@@ -200,12 +201,12 @@ CMD же запускает наш установленный php-fpm (вним�
         DB_NAME: ${DB_NAME}
         DB_USER: ${DB_USER}
         DB_PASS: ${DB_PASS}
+    container_name: wordpress
     depends_on:
       - mariadb
     restart: always
     volumes:
       - wp-volume:/var/www/
-    container_name: wordpress
 ```
 
 ## Шаг 3. Создание разделов и сети
@@ -279,6 +280,7 @@ services:
         DB_NAME: ${DB_NAME}
         DB_USER: ${DB_USER}
         DB_PASS: ${DB_PASS}
+    container_name: wordpress
     depends_on:
       - mariadb
     restart: always
@@ -286,7 +288,6 @@ services:
       - inception
     volumes:
       - wp-volume:/var/www/
-    container_name: wordpress
 
 volumes:
   wp-volume:
