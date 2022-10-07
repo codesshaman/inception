@@ -4,35 +4,31 @@ ARG PHP_VERSION=8
 
 RUN apk update && apk upgrade && apk add --no-cache \
     php${PHP_VERSION} \
-    php${PHP_VERSION}-fpm \
-    php${PHP_VERSION}-mysqli \
-    php${PHP_VERSION}-json \
+    php${PHP_VERSION}-common \
+    php${PHP_VERSION}-session \
+    php${PHP_VERSION}-iconv \
+    php${PHP_VERSION}-gd \
     php${PHP_VERSION}-curl \
-    php${PHP_VERSION}-dom \
-    php${PHP_VERSION}-exif \
-    php${PHP_VERSION}-fileinfo \
-    php${PHP_VERSION}-mbstring \
-    php${PHP_VERSION}-openssl \
     php${PHP_VERSION}-xml \
-    php${PHP_VERSION}-zip \
-    php${PHP_VERSION}-dev \
+    php${PHP_VERSION}-mysqli \
+    php${PHP_VERSION}-imap \
+    php${PHP_VERSION}-cgi \
+    php${PHP_VERSION}-pdo \
+    php${PHP_VERSION}-pdo_mysql \
+    php${PHP_VERSION}-soap \
+    php${PHP_VERSION}-posix \
     php${PHP_VERSION}-gettext \
-    wget nano && \
-    sed -i "s|upload_max_filesize = 2M|upload_max_filesize = 200M|g"  /etc/php8/php.ini && \
-    sed -i "s|post_max_size = 8M|post_max_size = 200M|g"  /etc/php8/php.ini && \
-    sed -i "s|memory_limit = 128M|memory_limit = 800M|g"  /etc/php8/php.ini && \
-    sed -i "s|max_execution_time = 30|max_execution_time = 600|g"  /etc/php8/php.ini && \
-    sed -i "s|;max_input_vars = 1000|max_input_vars = 5000|g"  /etc/php8/php.ini
+    php${PHP_VERSION}-ldap \
+    php${PHP_VERSION}-ctype \
+    php${PHP_VERSION}-dom \
+    php${PHP_VERSION}-simplexml \
+    wget
 
 WORKDIR /var/www
 
-#RUN wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php && \
-RUN wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1-en.php $$ \
-    mv adminer-4.8.1-en.php index.php && \
-    sed -i "s|;max_input_vars = 1000|max_input_vars = 10000|g"  /etc/php${PHP_VERSION}/php.ini
-# && chown -R root:root /var/www/
+RUN wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php && \
+    mv adminer-4.8.1.php index.php && chown -R root:root /var/www/
 
 EXPOSE 8080
 
-# CMD ["/usr/sbin/php-fpm8", "/var/www/adminer-4.8.1.php"]
 CMD	[ "php", "-S", "[::]:8080", "-t", "/var/www" ]
