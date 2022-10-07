@@ -18,6 +18,8 @@
 
 Отсеялись php8-mcrypt, php8-xmlrpc и, на удивление, php8-json. Удивление всё же оказалось приятным - если первые два пакета просто не реализованы ещё на alpine, то модуль json просто вошёл в ядро php начиная с версии 8.
 
+![настройка vsftpd](media/stickers/delete.png)
+
 Так же я убрал ненужный нам lighttpd и fast cgi. Итак, список пакетов сформирован, приступим к созданию Dockerfile:
 
 ``nano bonus/adminer/Dockerfile``
