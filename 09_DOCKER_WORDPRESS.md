@@ -221,6 +221,13 @@ volumes:
       o: bind
       type: none
       device: /home/${USER}/wordpress
+
+  mariadb:
+    name: db-volume
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/${USER}/mariadb
 ```
 
 Далее по заданию мы должны объединить наши контейнеры в единую сеть. На самом деле все контейнеры, которые прописаны внутри одного docker-compose - файле или конфигурации которых находятся в одной папке, автоматически объединяются в общую сеть. Однако название сети задаётся не нами. А ведь обращаться к сети иногда бывает полезно.
@@ -295,6 +302,13 @@ volumes:
       o: bind
       type: none
       device: /home/${USER}/wordpress
+
+  mariadb:
+    name: db-volume
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/${USER}/mariadb
 
 networks:
     inception:
