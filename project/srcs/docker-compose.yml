@@ -111,14 +111,14 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: /home/${USER}/wordpress
+      device: /home/${USER}/data/wordpress
 
   mariadb:
     name: db-volume
     driver_opts:
       o: bind
       type: none
-      device: /home/${USER}/mariadb
+      device: /home/${USER}/data/mariadb
 
 networks:
     inception:
