@@ -215,15 +215,13 @@ CMD же запускает наш установленный php-fpm (вним�
 
 ```
 volumes:
-  wordpress:
-    name: wp-volume
+  wp-volume:
     driver_opts:
       o: bind
       type: none
       device: /home/${USER}/data/wordpress
 
-  mariadb:
-    name: db-volume
+  db-volume:
     driver_opts:
       o: bind
       type: none
@@ -303,8 +301,7 @@ volumes:
       type: none
       device: /home/${USER}/data/wordpress
 
-  mariadb:
-    name: db-volume
+  db-volume:
     driver_opts:
       o: bind
       type: none
@@ -315,9 +312,13 @@ networks:
         driver: bridge
 ```
 
-Так же создадим папку wordpress для раздела в домашнем каталоге:
+Так же создадим папки для наших разделов в домашнем каталоге:
 
-``mkdir ~/wordpress``
+``mkdir ~/data/``
+
+``mkdir ~/data/wordpress``
+
+``mkdir ~/data/mariadb``
 
 ## Шаг 4. Создание файла конфигурации worpdress
 
