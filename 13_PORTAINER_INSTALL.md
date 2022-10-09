@@ -22,7 +22,7 @@ RUN echo "server {" > /etc/nginx/http.d/default.conf && \
     echo "    try_files \$uri /index.html;" >> /etc/nginx/http.d/default.conf && \
     echo "}}" >> /etc/nginx/http.d/default.conf
 
-COPY bonus/website/conf/* /var/www
+COPY bonus/website/conf/* /var/www/
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
@@ -45,8 +45,17 @@ CMD ["nginx", "-g", "daemon off;"]
     restart: always
 ```
 
-Порт 80 у нас свободен, подключим его
+Порт 80 у нас свободен, подключим его к нашему вебсайту, без необходимости накатывать ssl.
 
+## Шаг 4. Запуск сайта
+
+Если мы сделали всё правильно, переходим в папку project и делаем ``make re``. После рестарта проекта переходим на ``http://localhost`` и видим результат:
+
+![настройка website](media/bonus_part/step_18.png)
+
+Как видим, в этом пункте бонусов нет ничего сложного. Но именно этот пункт можно усложнять до бесконечности. Хотя, вряд ли найдутся желающие попрактиковать написание сайта на ASP.NET в рамках школьного проекта. Но в целом такое возможно.
+
+## Шаг 5. Portainer
 
 Ура, Казань, я закончил писать свой гайд!
 
