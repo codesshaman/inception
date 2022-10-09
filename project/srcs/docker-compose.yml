@@ -113,8 +113,7 @@ volumes:
       type: none
       device: /home/${USER}/data/wordpress
 
-  mariadb:
-    name: db-volume
+  db-volume:
     driver_opts:
       o: bind
       type: none
