@@ -114,7 +114,7 @@ mkdir project/srcs/requirements/mariadb
 mkdir project/srcs/requirements/mariadb/conf
 touch project/srcs/requirements/mariadb/conf/create_db.sh
 mkdir project/srcs/requirements/mariadb/tools
-echo "" > project/srcs/requirements/mariadb/tools/.gitikeep
+echo "" > project/srcs/requirements/mariadb/tools/.gitkeep
 touch project/srcs/requirements/mariadb/Dockerfile
 touch project/srcs/requirements/mariadb/.dockerignore
 echo ".git" > project/srcs/requirements/mariadb/.dockerignore
@@ -131,7 +131,7 @@ mkdir project/srcs/requirements/wordpress
 mkdir project/srcs/requirements/wordpress/conf
 touch project/srcs/requirements/wordpress/conf/wp-config-create.sh
 mkdir project/srcs/requirements/wordpress/tools
-echo "" > project/srcs/requirements/wordpress/tools/.gitikeep
+echo "" > project/srcs/requirements/wordpress/tools/.gitkeep
 touch project/srcs/requirements/wordpress/Dockerfile
 touch project/srcs/requirements/wordpress/.dockerignore
 echo ".git" > project/srcs/requirements/wordpress/.dockerignore
