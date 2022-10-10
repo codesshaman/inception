@@ -109,6 +109,6 @@ docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /va
 
 А напоследок немного юмора от GitHub:
 
-![настройка website](media/bonus_part/JS.png.png)
+![настройка website](media/bonus_part/JS.png)
 
 К слову, JS-библиотеки сгенерированного artisteer-ом веб-сайта действительно занимают больше всего кода. Так что всё это время мы писали JS-проект, с чем я нас и поздравляю.
