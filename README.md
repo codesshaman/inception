@@ -10,23 +10,23 @@
 
 Коротко об этапах проекта:
 
-- [X] Установка ОС в virtualbox - гайд 00
-- [X] Установка софта внутри ОС - гайд 01
-- [X] Проброс портов на хост - гайд 02
-- [X] Сохранение снимков в облако - гайд 03
-- [X] Предварительная настройка - гайд 04
-- [X] Установка сертификата - гайд 05
-- [X] Создание Makefile - гайд 06
-- [X] Развёртывание nginx - гайд 07
-- [X] Развёртывание mariadb - гайд 08
-- [X] Развёртывание wordpress - гайд 09
+- [X] Установка ОС в virtualbox - [гайд 00]([https://www.debian.org/ "Установка ОС в virtualbox"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
+- [X] Установка софта внутри ОС - [гайд 01]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
+- [X] Проброс портов на хост - [гайд 02]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
+- [X] Сохранение снимков в облако - [гайд 03]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
+- [X] Предварительная настройка - [гайд 04]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
+- [X] Установка сертификата - [гайд 05]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
+- [X] Создание Makefile - [гайд 06]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
+- [X] Развёртывание nginx - [гайд 07]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
+- [X] Развёртывание mariadb - [гайд 08]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
+- [X] Развёртывание wordpress - [гайд 09]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
 
 ***БОНУСНАЯ ЧАСТЬ***
 
-- [X] Установка Redis - гайд 10
-- [X] Установка vsftpd - гайд 11
-- [X] Установка Adminler - гайд 12
-- [X] Установка portainer - гайд 13
+- [X] Установка Redis - [гайд 10]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
+- [X] Установка vsftpd - [гайд 11]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
+- [X] Установка Adminler - [гайд 12]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
+- [X] Установка portainer - гайд [гайд 13]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
 
 Проект написан с бонусами на 125.
 
