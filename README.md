@@ -10,7 +10,7 @@
 
 Коротко об этапах проекта:
 
-- [X] Установка ОС в virtualbox - [гайд 00]([https://www.debian.org/ "Установка ОС в virtualbox"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
+- [X] Установка ОС в virtualbox - [гайд 00]((https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md "Установка ОС в virtualbox")
 - [X] Установка софта внутри ОС - [гайд 01]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
 - [X] Проброс портов на хост - [гайд 02]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
 - [X] Сохранение снимков в облако - [гайд 03]([https://www.debian.org/ "скачать debian"](https://github.com/codesshaman/inception/blob/main/00_INSTALL_SYSTEM.md))
