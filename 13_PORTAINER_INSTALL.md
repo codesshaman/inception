@@ -6,7 +6,7 @@
 
 По заданию мы должны создать самописный сайт используя ту технологию, которая нам ближе. Здесь каждый выбирает сам, какой язык использовать и какой контейнер создавать. Те, кому нравится JS, могут использовать контейнер с nodejs и react, любители питона могут создать страницу на django и т.д. Я не стал заморачиваться и использовал готовое решение для создания страницы - wysiwyg-редактор для генерации статичного html.
 
-Сам сайт лежит в ``bonus/website/conf``, его можно открыть прямо в браузере, так как это html.
+Сам сайт лежит в ``requirements/bonus/website/conf``, его можно открыть прямо в браузере, так как это html.
 
 ## Шаг 2. Dockerfile
 
@@ -22,7 +22,7 @@ RUN echo "server {" > /etc/nginx/http.d/default.conf && \
     echo "    try_files \$uri /index.html;" >> /etc/nginx/http.d/default.conf && \
     echo "}}" >> /etc/nginx/http.d/default.conf
 
-COPY bonus/website/conf/* /var/www/
+COPY requirements/bonus/website/conf/* /var/www/
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
@@ -38,7 +38,7 @@ CMD ["nginx", "-g", "daemon off;"]
   website:
     build:
       context: .
-      dockerfile: bonus/website/Dockerfile
+      dockerfile: requirements/bonus/website/Dockerfile
     container_name: website
     ports:
       - "80:80"
