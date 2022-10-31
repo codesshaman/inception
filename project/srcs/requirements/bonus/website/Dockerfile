@@ -7,7 +7,7 @@ RUN echo "server {" > /etc/nginx/http.d/default.conf && \
     echo "    try_files \$uri /index.html;" >> /etc/nginx/http.d/default.conf && \
     echo "}}" >> /etc/nginx/http.d/default.conf
 
-COPY bonus/website/conf/* /var/www/
+COPY requirements/bonus/website/conf/* /var/www/
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

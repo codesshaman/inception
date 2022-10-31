@@ -56,7 +56,7 @@ services:
   redis:
     build:
       context: .
-      dockerfile: bonus/redis/Dockerfile
+      dockerfile: requirements/bonus/redis/Dockerfile
     container_name: redis
     depends_on:
       - wordpress
@@ -69,7 +69,7 @@ services:
   vsftpd:
     build:
       context: .
-      dockerfile: bonus/vsftpd/Dockerfile
+      dockerfile: requirements/bonus/vsftpd/Dockerfile
       args:
         FTP_USR: ${FTP_USR}
         FTP_PWD: ${FTP_PWD}
@@ -87,7 +87,7 @@ services:
   adminer:
     build:
       context: .
-      dockerfile: bonus/adminer/Dockerfile
+      dockerfile: requirements/bonus/adminer/Dockerfile
     container_name: adminer
     depends_on:
       - mariadb
@@ -100,7 +100,7 @@ services:
   website:
     build:
       context: .
-      dockerfile: bonus/website/Dockerfile
+      dockerfile: requirements/bonus/website/Dockerfile
     container_name: website
     ports:
       - "80:80"
