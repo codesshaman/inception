@@ -404,8 +404,6 @@ server {
 
 # Шаг 6. Проверка работы конфигурации
 
-А теперь внимание! Первый запуск и первоначальная сборка конфигурации должна производиться из каталога ``~/project/srcs``, иначе docker-compose не подхватит наши переменные окружения. Далее стартовать и тормозить контейнеры уже можно через Makefile, но сначала для билда запускаем конфигурацию вручную!
-
 Итак, после того, как мы выполним ``docker-compose up -d --build`` в нашей директории ``~/project/srcs``, мы некоторое время будем наблюдать за сборкой конфигурации. И наконец мы обнаружим, что всё собралось и работает:
 
 ![настройка wordpress](media/docker_wordpress/install_all.png)
@@ -500,25 +498,25 @@ zlib
 
 ## Шаг 8. Изменение Makefile
 
-Так же не забываем копировать наш Makefile. Его придётся немного изменить, потому как docker-compose у нас лежит по пути srcs:
+Так же не забываем копировать наш Makefile. Его придётся немного изменить, потому как docker-compose у нас лежит по пути srcs. Это накладывает определённые ограничения на нас, потому как делая make на директорию выше мы не подхватим наши секреты (система будет искать .env в той же директории, где лежит Makefile). Поэтому указываем нашему docker-compose не только путь к ./srcs, но и путь к .env. Делается это при помощи указания флага  --env-file:
 
 ```
 name = inception
 all:
 	@printf "Launch configuration ${name}...\n"
-	@docker-compose -f ./srcs/docker-compose.yml up -d
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d
 
 build:
 	@printf "Building configuration ${name}...\n"
-	@docker-compose -f ./srcs/docker-compose.yml up -d --build
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
 
 down:
 	@printf "Stopping configuration ${name}...\n"
-	@docker-compose -f ./srcs/docker-compose.yml down
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env down
 
-re:
+re: down
 	@printf "Rebuild configuration ${name}...\n"
-	@docker-compose -f ./srcs/docker-compose.yml up -d --build
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
 
 clean: down
 	@printf "Cleaning configuration ${name}...\n"
@@ -542,6 +540,6 @@ fclean:
 
 ***
 
-На этом основная часть проекта закончена. После настроек wordpress проект можно будет сдать. Так же нужно сохранить в репозиторий все исходники и уметь грамотно разворачивать из них свой проект.
+Развёртывание проекта происходит ``make build``, остановка - ``make down``, запуск после остановки - ``make`` и т.д.
 
-Развёртывание проекта происходит из папки srcs командой ``docker-compose up -d --build``, а управление запуском-остановкой через Makefile на уровень выше (``make down``, ``make`` и т.д.).
+На этом основная часть проекта закончена. После настроек wordpress проект можно будет сдать. Так же нужно сохранить в репозиторий все исходники и уметь грамотно разворачивать из них свой проект.
