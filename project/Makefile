@@ -1,19 +1,19 @@
 name = inception
 all:
 	@printf "Launch configuration ${name}...\n"
-	@docker-compose -f ./srcs/docker-compose.yml up -d
+	@docker-compose -f ./srcs/docker-compose.yml --env-file up -d
 
 build:
 	@printf "Building configuration ${name}...\n"
-	@docker-compose -f ./srcs/docker-compose.yml up -d --build
+	@docker-compose -f ./srcs/docker-compose.yml --env-file up -d --build
 
 down:
 	@printf "Stopping configuration ${name}...\n"
-	@docker-compose -f ./srcs/docker-compose.yml down
+	@docker-compose -f ./srcs/docker-compose.yml --env-file down
 
 re:
 	@printf "Rebuild configuration ${name}...\n"
-	@docker-compose -f ./srcs/docker-compose.yml up -d --build
+	@docker-compose -f ./srcs/docker-compose.yml --env-file up -d --build
 
 clean: down
 	@printf "Cleaning configuration ${name}...\n"
