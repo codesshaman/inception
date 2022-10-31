@@ -22,7 +22,7 @@
 
 Как обычно, начинаем с Dockerfile:
 
-``nano bonus/vsftpd/Dockerfile``
+``nano requirements/bonus/vsftpd/Dockerfile``
 
 В нём мы получим имя пользователя и пароль для нашего юзера ftp-сервера в переменных через ARG. Затем установим наш vsftpd. Нам нужно создать пользователя для подключения к серверу, и следующим слоем мы это сделаем. Домашним разделом установим для него /var/www, куда мы и примонтируем раздел с нашим wp. Не забудем добавить этого пользователя в группу root чтобы мы могли обрабатывать каталог wordpress-а (иначе просто не хватит прав).
 
@@ -87,7 +87,7 @@ FTP_PWD=ftppass
   vsftpd:
     build:
       context: .
-      dockerfile: bonus/vsftpd/Dockerfile
+      dockerfile: requirements/bonus/vsftpd/Dockerfile
       args:
         FTP_USR: ${FTP_USR}
         FTP_PWD: ${FTP_PWD}
