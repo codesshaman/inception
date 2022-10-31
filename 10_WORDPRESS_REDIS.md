@@ -52,21 +52,21 @@
 
 Далее мы создадим папку для бонусов и директории бонусных проектов:
 
-``mkdir bonus``
+``mkdir requirements/bonus``
 
-``mkdir bonus/redis``
+``mkdir requirements/bonus/redis``
 
-``mkdir bonus/vsftpd``
+``mkdir requirements/bonus/vsftpd``
 
-``mkdir bonus/adminer``
+``mkdir requirements/bonus/adminer``
 
-``mkdir bonus/website``
+``mkdir requirements/bonus/website``
 
-``mkdir bonus/website/conf``
+``mkdir requirements/bonus/website/conf``
 
 В директории redis мы создадим Dockerfile:
 
-``nano bonus/redis/Dockerfile``
+``nano requirements/bonus/redis/Dockerfile``
 
 В него добавим следующий код:
 
@@ -94,7 +94,7 @@ CMD [ "redis-server" , "/etc/redis.conf" ]
   redis:
     build:
       context: .
-      dockerfile: bonus/redis/Dockerfile
+      dockerfile: requirements/bonus/redis/Dockerfile
     container_name: redis
     ports:
       - "6379:6379"
