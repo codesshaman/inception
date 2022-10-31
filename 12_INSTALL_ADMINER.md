@@ -26,7 +26,7 @@
 
 Так же я убрал ненужные нам lighttpd и fast cgi. Итак, список пакетов сформирован, приступим к созданию Dockerfile:
 
-``nano bonus/adminer/Dockerfile``
+``nano requirements/bonus/adminer/Dockerfile``
 
 За основу возьмём всё тот же alpine 3.16, занесём в переменную версию php и установим все необходимые нам пакеты из готового списка:
 
@@ -79,7 +79,7 @@ CMD	[ "php", "-S", "[::]:8080", "-t", "/var/www" ]
   adminer:
     build:
       context: .
-      dockerfile: bonus/adminer/Dockerfile
+      dockerfile: requirements/bonus/adminer/Dockerfile
     container_name: adminer
     depends_on:
       - mariadb
