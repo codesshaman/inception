@@ -163,7 +163,7 @@ down:
 
 re:	down
 	@printf "Rebuild configuration ${name}...\n"
-	@docker-compose -f ./docker-compose.yml up -d --build
+	[@docker-compose -f ./docker-compose.yml up -d --build](https://docs.docker.com/compose/environment-variables/)
 
 clean: down
 	@printf "Cleaning configuration ${name}...\n"
@@ -188,3 +188,10 @@ fclean:
 ![makefile](media/stickers/dogengine.png)
 
 > А ещё не забываем сделать снапшот и сохраниться в облачко!
+
+P.S. Для того, чтобы обеспечить корректный запуск из любого места, помимо пути к файлу docker-compose.yml необходимо прописать путь и к .env-файлу. 
+В итоге получится следующий вид:
+'''
+@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
+'''
+Конечно же, имеет смысл прописать этот путь для правил, где запускается сборка.
