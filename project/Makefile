@@ -26,6 +26,6 @@ fclean:
 	@docker system prune --all --force --volumes
 	@docker network prune --force
 	@docker volume prune --force
-	@sudo rm -rf ~/wordpress/*
+	@sudo rm -rf ~/data
 
 .PHONY	: all build down re clean fclean
