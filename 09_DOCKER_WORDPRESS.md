@@ -22,9 +22,11 @@
 
 ## Шаг 1. Настройка Dockerfile
 
-Итак, мы переходим к настройке wordpress.  Действуем всё так же: берём за основу последний alpine и накатываем на него нужный нам софт.
+Итак, мы переходим к настройке wordpress. Действуем всё так же: берём за основу последний alpine и накатываем на него нужный нам софт.
 
 ![рабочий wordpress](media/stickers/usually.png)
+
+Переходим в srcs и делаем:
 
 ``nano requirements/wordpress/Dockerfile``
 
@@ -316,11 +318,15 @@ networks:
 
 ## Шаг 4. Создадим скрипт, генерирующий папку data
 
-При запуске make-файла мы должны проверить на существование директории, которые нам необходимы, и если их нет, то создать их. Это будет делать простой скрипт. Положим его, к примеру, в папку пользователя, и сделаем для удобства скрытым:
+При запуске make-файла мы должны проверить на существование директории, которые нам необходимы, и если их нет, то создать их. Это будет делать простой скрипт. Положим его, к примеру, в папку wordpress/tools, сначала создав эту папку:
 
-``nano ~/.make_dir.sh``
+``mkdir requirements/wordpress/tools``
 
-Вставим в него следующий код:
+Создаём файл:
+
+``nano requirements/wordpress/tools/make_dir.sh``
+
+Вставляем в него следующий код:
 
 ```
 #!/bin/bash
@@ -335,11 +341,11 @@ fi
 
 Дадим скрипту права на исполнение:
 
-``chmod +x ~/.make_dir.sh``
+``chmod +x requirements/wordpress/tools/make_dir.sh``
 
 Тут же выполним его:
 
-``~/.make_dir.sh``
+``requirements/wordpress/tools/make_dir.sh``
 
 И проверим результат:
 
@@ -533,12 +539,12 @@ zlib
 name = inception
 all:
 	@printf "Launch configuration ${name}...\n"
-  @bash /home/${USER}/.make_dir.sh
+  @bash srcs/requirements/wordpress/tools/make_dir.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d
 
 build:
 	@printf "Building configuration ${name}...\n"
-  @bash /home/${USER}/.make_dir.sh
+  @bash srcs/requirements/wordpress/tools/make_dir.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
 
 down:
