@@ -23,6 +23,7 @@ clean: down
 	@sudo rm -rf ~/data/wordpress/*
 	@sudo rm -rf ~/data/mariadb/*
 
+# Осторожно! Fclean удаляет все образы Docker которые есть на машине!
 fclean:
 	@printf "Total clean of all configurations docker\n"
 	@docker stop $$(docker ps -qa)
