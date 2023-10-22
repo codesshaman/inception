@@ -133,7 +133,6 @@ touch project/srcs/requirements/wordpress/conf/wp-config-create.sh
 mkdir project/srcs/requirements/wordpress/tools
 echo "" > project/srcs/requirements/wordpress/tools/.gitkeep
 touch project/srcs/requirements/wordpress/Dockerfile
-touch project/srcs/requirements/wordpress/.dockerignore
 echo ".git" > project/srcs/requirements/wordpress/.dockerignore
 echo ".env" >> project/srcs/requirements/wordpress/.dockerignore
 ```
