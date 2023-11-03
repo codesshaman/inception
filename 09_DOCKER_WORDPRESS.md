@@ -277,6 +277,8 @@ services:
       - "3306:3306"
     networks:
       - inception
+    volumes:
+      - db-volume:/var/lib/mysql
     restart: always
 
   wordpress:
