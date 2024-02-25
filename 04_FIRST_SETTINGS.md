@@ -124,8 +124,8 @@ mkdir project/srcs/requirements/nginx/conf
 touch project/srcs/requirements/nginx/conf/nginx.conf
 mkdir project/srcs/requirements/nginx/tools
 touch project/srcs/requirements/nginx/Dockerfile
-echo ".git" > project/srcs/requirements/mariadb/.dockerignore
-echo ".env" >> project/srcs/requirements/mariadb/.dockerignore
+echo ".git" > project/srcs/requirements/nginx/.dockerignore
+echo ".env" >> project/srcs/requirements/nginx/.dockerignore
 mkdir project/srcs/requirements/tools
 mkdir project/srcs/requirements/wordpress
 mkdir project/srcs/requirements/wordpress/conf
