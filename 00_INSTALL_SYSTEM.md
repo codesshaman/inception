@@ -139,7 +139,7 @@
 
 ![установка системы](media/install_debian/install_step_25.png)
 
-И установка завершиться:
+И установка завершится:
 
 ![установка системы](media/install_debian/install_step_26.png)
 
